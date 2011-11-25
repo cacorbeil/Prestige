@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameEngineCore.h" />
+    <ClInclude Include="Core\Incrementator.h" />
     <ClInclude Include="Macros\DLL.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

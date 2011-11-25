@@ -3,41 +3,58 @@
 
 #include "../Macros/DLL.h"
 
-template <class GAME_LOOP_FUNCTOR>
-class DllExport GameEngineCore
+#include "Incrementator.h"
+
+namespace GameEngineCore
 {
-public:
-	GameEngineCore(GAME_LOOP_FUNCTOR aGameLoopFunctor) :
-		mIsTerminated(false) ,
-		mFrameCount(0LL),
-		mGameLoopFunctor(aGameLoopFunctor)
+
+	namespace IncrementatorTypeEnum
 	{
+		enum Enum
+		{
+			FRAME_ID = 0,
+
+			//Use this enum to as your first value in your game IncrementatorType enum
+			INCREMENTOR_GAME_FOLLOW_UP, 
+		};
 	}
 
-	void StartEngine()
+	template <class GAME_LOOP_FUNCTOR>
+	class DllExport GameEngineCore
 	{
-		//Engine Loop
-		while(EngineIteration())
-		{ } // NULL BODY
-	}
+	public:
+		GameEngineCore()
+			: mIsTerminated(false)
+			, mFrameCount(0LL)
+			, mGameLoopFunctor()
+		{
+		}
 
-	inline bool IsTerminated()
-	{
-		return mIsTerminated;
-	}
+		void StartEngine()
+		{
+			//Engine Loop
+			while(EngineIteration())
+			{ } // NULL BODY
+		}
 
-protected:
-	bool GameEngineCore::EngineIteration()
-	{
-		std::cout << ".";
+		inline bool IsTerminated()
+		{
+			return mIsTerminated;
+		}
 
-		return mGameLoopFunctor();
-	}
+	protected:
+		bool GameEngineCore::EngineIteration()
+		{
+			std::cout << "Begin frame " << Incrementator<IncrementatorTypeEnum::FRAME_ID>::GetIncrement();
 
-private:
-	bool mIsTerminated;
-	long long mFrameCount;
-	GAME_LOOP_FUNCTOR mGameLoopFunctor;
-};
+			return mGameLoopFunctor();
+		}
+
+	private:
+		bool mIsTerminated;
+		long long mFrameCount;
+		GAME_LOOP_FUNCTOR mGameLoopFunctor;
+	};
+}
 
 #endif //GAME_ENGINE_CORE_H

@@ -57,7 +57,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <OutputFile>../bin/$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile>$(SolutionDir)$(Configuration)\$(ProjectName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,12 +83,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameEngine.vcxproj">
       <Project>{6e22bbc0-dbcb-4da3-adac-e9ad39876f4d}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
+      <Private>true</Private>      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>      <LinkLibraryDependencies>true</LinkLibraryDependencies>      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

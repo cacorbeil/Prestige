@@ -15,5 +15,8 @@
     <ClInclude Include="Macros\DLL.h">
       <Filter>Macros</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Incrementator.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
