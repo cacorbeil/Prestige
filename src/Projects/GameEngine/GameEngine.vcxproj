@@ -12,12 +12,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameEngineCore.h" />
-    <ClInclude Include="Core\Incrementator.h" />
     <ClInclude Include="Macros\DLL.h" />
+    <ClInclude Include="Util\Incrementator.h" />
+    <ClInclude Include="Util\StaticDistributedEnums.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\GameEngineCore.cpp" />
-    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DllMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}</ProjectGuid>
@@ -57,6 +65,8 @@
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\bin\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
     <TargetExt>.dll</TargetExt>
+    <SourcePath>$(SourcePath)</SourcePath>
+    <IncludePath>$(IncludePath);$(ProjectDir)/../;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -81,9 +91,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

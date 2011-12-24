@@ -7,22 +7,28 @@
     <Filter Include="Macros">
       <UniqueIdentifier>{b292a5d2-fad6-4fbe-9947-1ed3367c204e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{b6b62877-c02e-4aa6-a920-429dd1403f99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameEngineCore.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Incrementator.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Macros\DLL.h">
       <Filter>Macros</Filter>
     </ClInclude>
+    <ClInclude Include="Util\Incrementator.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\StaticDistributedEnums.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Core\GameEngineCore.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="DllMain.cpp" />
   </ItemGroup>
 </Project>

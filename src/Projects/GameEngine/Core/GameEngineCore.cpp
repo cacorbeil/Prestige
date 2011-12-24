@@ -2,6 +2,7 @@
 #include "GameEngineCore.h"
 
 #include <iostream>
+#include <iomanip>
 
 namespace GameEngine
 {
@@ -26,12 +27,13 @@ namespace GameEngine
 
 	bool GameEngineCore::EngineIteration()
 	{
-#if DEBUG
-		std::cout << "Begin debug frame " << Incrementator<IncrementatorTypeEnum::FRAME_ID>::GetIncrement();
-#else
-		std::cout << "Begin frame " << Incrementator<IncrementatorTypeEnum::FRAME_ID>::GetIncrement();		
-#endif
+		IncrementatorType frameId(Incrementator<IncrementatorTypeEnum::FRAME_ID>::GetIncrement());
 
+		std::cout << std::setfill('0');
+#if DEBUG
+		std::cout << "D";
+#endif
+		std::cout << "(" << std::setw(6) << frameId << ") ";
 
 		return mpGameLoopFunction();
 	}

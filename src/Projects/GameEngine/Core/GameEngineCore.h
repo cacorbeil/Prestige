@@ -1,12 +1,19 @@
 #ifndef GAME_ENGINE_CORE_H
 #define GAME_ENGINE_CORE_H
 
-#include "../Macros/DLL.h"
+#include "GameEngine/Macros/DLL.h"
 
-#include "Incrementator.h"
+#include "GameEngine/Util/Incrementator.h"
+#include "GameEngine/Util/StaticDistributedEnums.h"
 
 namespace GameEngine
 {
+	STATIC_DISTRIBUTED_ENUM_DEFINITION(FIRST_DISTRIBUTED_ENUM, COUNT|6, NULLABLE|VALUE_NULL, VALUE|VALUE_DEFAULT, VALUE|||VALUE_DEFAULTA|VALUE_DEFAULTB||)
+
+	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_A);
+	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_B);
+	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_C = VALUE_A);
+
 	typedef bool(*GAME_LOOP_FUNC)(void);
 
 	namespace IncrementatorTypeEnum
