@@ -15,14 +15,16 @@
 
 #################################
 # TODO:
-# 1- Look for a ; at end of definition and remove it
-# 2- Remember the tabulation from definition
-# 3- Actually Inject the code into the file
-# 4- Declare const or read project for the number of spaces / tabs for indentation
-# 5- System for enum parsing to find changes
-# 6- Count like nullable with a default name if none specified
-# 7- Multiple VALUE argument will stack
-# 8- Sort enum so that assignment are defined in the right order
+# 1 - Look for a ; at end of definition and remove it
+# 2 - Remember the tabulation from definition
+# 3 - Actually Inject the code into the file
+# 4 - Declare const or read project for the number of spaces / tabs for indentation
+# 5 - System for enum parsing to find changes
+# 6 - Count like nullable with a default name if none specified
+# 7 - Multiple VALUE argument will stack
+# 8 - Sort enum so that assignment are defined in the right order
+# 9 - Enum value as key so we can find duplicates
+# 10- Validate assigment so that the enum actually exists
 #################################
 
 # Imports
@@ -41,7 +43,7 @@ srcPath = sys.argv[1];
 outputPath = sys.argv[2];
 ignoreFile = ["StaticDistributedEnums.h"]
 sourceFileRegEx = re.compile(".*\.(cpp|h)$")
-staticEnumDefinitionRegEx = re.compile("STATIC_DISTRIBUTED_ENUM_DEFINITION\(\s*(([a-zA-Z0-9\_]+?)(\s*\,\s*([a-zA-Z0-9\_\|]+?))*)\)")
+staticEnumDefinitionRegEx = re.compile("STATIC_DISTRIBUTED_ENUM_DEFINITION\(\s*(([a-zA-Z0-9\_]+?)(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)")
 staticEnumValueRegEx = re.compile("STATIC_DISTRIBUTED_ENUM\(\s*([a-zA-Z0-9\_]+?)\s*\,\s*(([a-zA-Z0-9\_])+?\s*([=]\s*[a-zA-Z0-9\_]+?)?)\)")
 outputFilename = "StaticDistributedEnumOutput.txt"
 
@@ -127,6 +129,22 @@ def findStaticEnumDefinition(path):
 							
 			StaticEnumDictionnary[matches[1]] = arguments;
 			
+def buildValueTupleFromString(enumName, valueString):
+	valueTuple = valueString.split("=");
+	for index in range(len(valueTuple)):
+		valueTuple[index] = valueTuple[index].strip();
+	
+	if len(valueTuple) > 2:
+		print("Warning: Static Distributed Enum '" + enumName + "' has multiple assign for the same value '" + valueTuple[0] + "'. Additionnal assignment will be ignored.");
+		for i in range(2, len(valueTuple)):
+			valueTuple.pop(2);
+	
+	if len(valueTuple) > 1 and valueTuple[1] == "":
+		print("Warning: Static Distributed Enum '" + enumName + "' has a syntax error with the '=' operator for the value '" + valueTuple[0] + "'. Assignment will be ignored.");
+		valueTuple.pop(1);
+	
+	return valueTuple;
+			
 def fillStaticEnum(path):
 	global StaticEnumDictionnary;
 	
@@ -135,20 +153,11 @@ def fillStaticEnum(path):
 		matches = re.findall(staticEnumValueRegEx, line);
 		if len(matches) > 0: # A static distributed enum has been found
 			matches = matches[0];
-			valueTuple = matches[1].split("=");
-			for index in range(len(valueTuple)):
-				valueTuple[index] = valueTuple[index].strip();
-			
-			if len(valueTuple) > 2:
-				print("Warning: Static Distributed Enum '" + matches[0] + "' has multiple assign for the same value '" + valueTuple[0] + "'. Additionnal assignment will be ignored.");
-				for i in range(1, len(valueTuple)):
-					valueTuple.pop(i);
-			
-			if len(valueTuple) > 1 and valueTuple[1] == "":
-				print("Warning: Static Distributed Enum '" + matches[0] + "' has a syntax error with the '=' operator for the value '" + valueTuple[0] + "'. Assignment will be ignored.");
-				valueTuple.pop(1);
-			
-			StaticEnumDictionnary[matches[0]]['values'].append(valueTuple);
+			valueTuple = buildValueTupleFromString(matches[0], matches[1]);
+			if matches[0] in StaticEnumDictionnary:
+				StaticEnumDictionnary[matches[0]]['values'].append(valueTuple);
+			else:
+				print("Warning: Static Distributed Enum '" + matches[0] + "' has not been found ignoring enum value '" + valueTuple[0] + "'.");
 			
 def injectStaticEnum(path):
 	global StaticEnumDictionnary;
@@ -172,8 +181,9 @@ def buildStaticEnumValues():
 		# fill Enum with default starting values
 		if 'NULLABLE' in StaticEnumDictionnary[staticEnumName]['arguments']:
 			StaticEnumDictionnary[staticEnumName]['values'].append(StaticEnumDictionnary[staticEnumName]['arguments']['NULLABLE']);
-			
-			
+		if 'VALUE' in StaticEnumDictionnary[staticEnumName]['arguments']:
+			for value in StaticEnumDictionnary[staticEnumName]['arguments']['VALUE']:
+				StaticEnumDictionnary[staticEnumName]['values'].append(buildValueTupleFromString(staticEnumName, value));			
 		
 	# Parse files to build enums
 	searchFolderAndApplyFunction(srcPath, fillStaticEnum);
