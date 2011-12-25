@@ -8,45 +8,61 @@
 
 namespace GameEngine
 {
-	STATIC_DISTRIBUTED_ENUM_DEFINITION(FIRST_DISTRIBUTED_ENUM, COUNT|6, NULLABLE|VALUE_NULL, VALUE|VALUE_DEFAULT, VALUE|||VALUE_DEFAULTA|VALUE_DEFAULTB = VALUE_DEFAULTA||)
+   STATIC_DISTRIBUTED_ENUM_DEFINITION(FIRST_DISTRIBUTED_ENUM, COUNT|VALUE_COUNT, NULLABLE|VALUE_NULL)
+   {
+      //COUNT: VALUE_COUNT
+      //NULLABLE: VALUE_NULL
+      VALUE_NULL, // Enum definition: NULLABLE
+      VALUE_A, // From file: 'Core\GameEngineCore.h'
+      VALUE_C = VALUE_A, // From file: 'Core\GameEngineCore.h'
+      VALUE_COUNT, // Enum definition: COUNT
+   };
 
-	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_A);
-	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_B);
-	STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_C === VALUE_A==);
+   STATIC_DISTRIBUTED_ENUM_DEFINITION(SECOND_DISTRIBUTED_ENUM, COUNT, NULLABLE)
+   {
+      //COUNT: SECOND_DISTRIBUTED_ENUM_COUNT
+      //NULLABLE: SECOND_DISTRIBUTED_ENUM_NONE
+      SECOND_DISTRIBUTED_ENUM_NONE, // Enum definition: NULLABLE
+      SECOND_DISTRIBUTED_ENUM_COUNT, // Enum definition: COUNT
+   };
+     
 
-	typedef bool(*GAME_LOOP_FUNC)(void);
+   STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_C = VALUE_A);
+   STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_A);
 
-	namespace IncrementatorTypeEnum
-	{ 
-		enum Enum
-		{
-			FRAME_ID = 0,
+   typedef bool(*GAME_LOOP_FUNC)(void);
 
-			//Use this enum to as your first value in your game IncrementatorType enum
-			INCREMENTOR_GAME_FOLLOW_UP, 
-		};
-	}
+   namespace IncrementatorTypeEnum
+   { 
+      enum Enum
+      {
+         FRAME_ID = 0,
 
-	//template<class GAME_LOOP_FUNCTOR>
-	class DLL_DECL GameEngineCore
-	{
-	public:
-		GameEngineCore(GAME_LOOP_FUNC apGameLoopFunction);
+         //Use this enum to as your first value in your game IncrementatorType enum
+         INCREMENTOR_GAME_FOLLOW_UP, 
+      };
+   }
 
-		void GameEngineCore::StartEngine();
+   //template<class GAME_LOOP_FUNCTOR>
+   class DLL_DECL GameEngineCore
+   {
+   public:
+      GameEngineCore(GAME_LOOP_FUNC apGameLoopFunction);
 
-		bool GameEngineCore::IsTerminated();
+      void GameEngineCore::StartEngine();
 
-	protected:
-		bool GameEngineCore::EngineIteration();
+      bool GameEngineCore::IsTerminated();
 
-	private:
-		bool mIsTerminated;
-		long long mFrameCount;
-		GAME_LOOP_FUNC mpGameLoopFunction;  
-	};
+   protected:
+      bool GameEngineCore::EngineIteration();
 
-	//#include "GameEngineCore.cpp"
+   private:
+      bool mIsTerminated;
+      long long mFrameCount;
+      GAME_LOOP_FUNC mpGameLoopFunction;  
+   };
+
+   //#include "GameEngineCore.cpp"
 }
 
 #endif //GAME_ENGINE_CORE_H

@@ -5,8 +5,8 @@
 
 struct Particle
 {
-    Vector3 mPosition;
-    Vector3 mVelocity;
+   Vector3 mPosition;
+   Vector3 mVelocity;
 };
 
 #endif PARTICLE_H

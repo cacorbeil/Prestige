@@ -5,7 +5,9 @@ set PreBuildToolsPath=%SolutionPath%..\Tools\BuildEvents\EngineBuildEvents\PreBu
 set PythonExecutablePath=%SolutionPath%..\ThirdParty\Python\python.exe
 
 set IncrementatorPath="%PreBuildToolsPath%\Incrementator.py"
+set DistributedEnumPath="%PreBuildToolsPath%\DistributedEnum.py"
 
 %PythonExecutablePath% %IncrementatorPath% "%SolutionPath%Projects\GameEngine\\" "%PreBuildToolsPath%..\Output\\"
+%PythonExecutablePath% %DistributedEnumPath% "%SolutionPath%Projects\GameEngine\\" "%PreBuildToolsPath%..\Output\\"
 
 echo Custom Pre-Build Event End

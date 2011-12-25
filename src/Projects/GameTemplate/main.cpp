@@ -10,29 +10,31 @@
 
 namespace IncrementatorTypeEnum
 {
-	enum ENUM
-	{
-		GAME_LOOP = GameEngine::IncrementatorTypeEnum::INCREMENTOR_GAME_FOLLOW_UP,
-		SPECIFIC, 
-	};
+   enum ENUM
+   {
+      GAME_LOOP = GameEngine::IncrementatorTypeEnum::INCREMENTOR_GAME_FOLLOW_UP,
+      SPECIFIC, 
+   };
 }
 
+STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_B);
+STATIC_DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, FROM_GAMETEMPLATE);
 
 static bool MainLoop()
 {
-	static const IncrementatorType Tbb = STATIC_INCREMENTATOR(Testb,0); 
+   static const IncrementatorType Tbb = STATIC_INCREMENTATOR(Testb,0); 
 
-	clock_t before = clock();
-	//ParticleManager::GetInstance()->Update(0.033f);
-	std::cout << "Time elapsed: " << (clock() - before) << std::endl;
+   clock_t before = clock();
+   //ParticleManager::GetInstance()->Update(0.033f);
+   std::cout << "Time elapsed: " << (clock() - before) << std::endl;
 
-	return true;
+   return true;
 }
 
 
 int main( )
 {
-	GameEngine::GameEngineCore gameEngine = GameEngine::GameEngineCore(MainLoop);
+   GameEngine::GameEngineCore gameEngine = GameEngine::GameEngineCore(MainLoop);
 
-	gameEngine.StartEngine();
+   gameEngine.StartEngine();
 }
