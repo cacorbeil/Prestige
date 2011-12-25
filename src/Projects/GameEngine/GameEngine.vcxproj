@@ -14,7 +14,7 @@
     <ClInclude Include="Core\GameEngineCore.h" />
     <ClInclude Include="Macros\DLL.h" />
     <ClInclude Include="Util\Incrementator.h" />
-    <ClInclude Include="Util\StaticDistributedEnums.h" />
+    <ClInclude Include="Util\DistributedEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\GameEngineCore.cpp" />
@@ -102,6 +102,12 @@
     <PreBuildEvent>
       <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreBuildEvent\Event.bat" "$(SolutionDir)"</Command>
     </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreLinkEvent\Event.bat" "$(SolutionDir)"</Command>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PostBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

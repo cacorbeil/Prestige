@@ -84,6 +84,15 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(OutDir)/GameEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PreBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+    </PreBuildEvent>
+    <PreLinkEvent>
+      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PreLinkEvent\Event.bat" "$(SolutionDir)"</Command>
+    </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PostBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
