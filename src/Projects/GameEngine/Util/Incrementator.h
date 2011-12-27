@@ -15,5 +15,4 @@ struct Incrementator
 
 #define STATIC_INCREMENTATOR(Name, Value) static_cast<IncrementatorType>(Value)
 
-
 #endif INCREMENTATOR_H

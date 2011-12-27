@@ -8,27 +8,25 @@
 
 namespace GameEngine
 {
-   DISTRIBUTED_ENUM_DEFINITION_BEGIN(FIRST_DISTRIBUTED_ENUM, COUNT|VALUE_COUNT, NULLABLE|VALUE_NULLABLE)
+   DISTRIBUTED_ENUM_DEFINITION_BEGIN(FIRST_DISTRIBUTED_ENUM, COUNT, NULLABLE)
    {
-      VALUE_NULLABLE, // Enum definition: NULLABLE
-      VALUE_A, // From file: 'Core\GameEngineCore.h'
-      VALUE_C = VALUE_A, // From file: 'Core\GameEngineCore.h'
-      VALUE_COUNT, // Enum definition: COUNT
+      NONE, // Enum definition: NULLABLE
+      NEW_VALUEA, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEB, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEC, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUED, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEE, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEK, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEJ, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEF, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEH, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEI, // From file: 'Core\GameEngineCore.cpp'
+      NEW_VALUEG = NEW_VALUEA, // From file: 'Core\GameEngineCore.cpp'
+      COUNT = 12, // Enum definition: COUNT
    }
    DISTRIBUTED_ENUM_DEFINITION_END
 
-   DISTRIBUTED_ENUM_DEFINITION_BEGIN(SECOND_DISTRIBUTED_ENUM, COUNT, NULLABLE)
-   {
-      SECOND_DISTRIBUTED_ENUM_NONE, // Enum definition: NULLABLE
-      SECOND_DISTRIBUTED_ENUM_COUNT, // Enum definition: COUNT
-   }
-   DISTRIBUTED_ENUM_DEFINITION_END
-     
-
-   DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_C = VALUE_A);
-   DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_A);
-
-   typedef bool(*GAME_LOOP_FUNC)(void);
+   typedef bool(*GAME_LOOP_FUNC)(void); 
 
    namespace IncrementatorTypeEnum
    { 

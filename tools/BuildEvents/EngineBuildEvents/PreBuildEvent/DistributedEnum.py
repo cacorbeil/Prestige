@@ -13,48 +13,48 @@
 #    to what have been found
 #################################
 
-#################################
-# TODO:
-# 1 - Declare const or read project for the number of spaces / tabs for indentation
-# 2 - Find bad syntax
-# 3 - Support for prioritizing
-# 4 - what happens when 2 def in the same file / different file
-# 5 - What happens when a non exisiting argument is used
-# 5 - What happens when unsortable enum values are made?
-# 6 - What happens if the file is locked?
-# 7 - Fix that if you remove the footer the enum falls through and clear stuff up
-#################################
-
 # Imports
 import os;
+import stat;
 import sys;
 import re;
-import fileinput
-import datetime
+import fileinput;
+import datetime;
+import SolutionConstants;
+import ErrorHandling;
 
-if len(sys.argv) < 2:
-	sys.exit("Not enough arguments");
+if len(sys.argv) - 1 < 1:
+	sys.exit("Not enough arguments, need 1, but got " + str(len(sys.argv) - 1));
 
 # Constants
 
-srcPath = sys.argv[1];
-ignoreFile = ["DistributedEnum.h"]
-sourceFileRegEx = re.compile(".*\.(cpp|h)$")
+CodeSourcePath = sys.argv[1];
+IgnoredFileList = ["DistributedEnum.h"];
+SourceFileRegEx = re.compile(".*\.(cpp|h)$")
 DistributedEnumHeaderMacro = "DISTRIBUTED_ENUM_DEFINITION_BEGIN";
 DistributedEnumFooterMacro = "DISTRIBUTED_ENUM_DEFINITION_END";
-DistributedEnumDefinitionRegEx = re.compile(DistributedEnumHeaderMacro + "\(\s*(([a-zA-Z0-9\_]+?)(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)([;])?")
-DistributedEnumValueRegEx = re.compile("DISTRIBUTED_ENUM\(\s*([a-zA-Z0-9\_]+?)\s*\,\s*(([a-zA-Z0-9\_])+?\s*([=]\s*[a-zA-Z0-9\_]+?)?)\)")
-blockStartRegEx = re.compile("\s*{")
-BlockEndRegEx = re.compile("^\s*}")
-DistributedEnumDefinitionEndRegEx = re.compile("\s*DISTRIBUTED_ENUM_DEFINITION_END")
-commentBlockRegEx = re.compile("^\s*//")
-enumValueRegEx = re.compile("\s*([a-zA-Z0-9\_]+?)\s*(=\s*([a-zA-Z0-9\_]+?))?\s*,\s*//\s*(.*)")
-outputFilename = "StaticDistributedEnumOutput.txt"
+VARIABLE_STRING = "[a-zA-Z\_]+?[a-zA-Z0-9\_]*";
+ARGUMENT_STRING = "[a-zA-Z\_]+?[a-zA-Z0-9\_\|]*";
+PARAMETER_STRING = "[a-zA-Z0-9\_]*";
+DistributedEnumDefinitionFullSyntaxRegEx = re.compile("^\s*" + DistributedEnumHeaderMacro + "\(\s*(("+VARIABLE_STRING+")(\s*\,\s*("+ARGUMENT_STRING+")|(VALUE\s*(|\s*("+ARGUMENT_STRING+"\s*[=]\s*"+PARAMETER_STRING+")+)?)\s*)*)\s*\)([;])?");
+DistributedEnumDefinitionHeaderRegEx = re.compile("^\s*" + DistributedEnumHeaderMacro + "\(("+VARIABLE_STRING+")");
+DistributedEnumValueRegEx = re.compile("^\s*DISTRIBUTED_ENUM\(\s*([a-zA-Z0-9\_]+?)\s*\,\s*(([a-zA-Z0-9\_])+?\s*([=]\s*[a-zA-Z0-9\_]+?)?)\)");
+BlockStartRegEx = re.compile("^\s*{");
+BlockEndRegEx = re.compile("^\s*}");
+DistributedEnumDefinitionEndRegEx = re.compile("^\s*DISTRIBUTED_ENUM_DEFINITION_END");
+CommentBlockRegEx = re.compile("^\s*//");
+EmptyLineRegEx = re.compile("^\s*\n");
+EnumValueRegEx = re.compile("^\s*([a-zA-Z0-9\_]+?)\s*(=\s*([a-zA-Z0-9\_]+?))?\s*,\s*//\s*(.*)");
+NumberValueRegEx = re.compile("^\d+$");
 
 # Globals
 
 EnumDictionary = {};
-lineChangedCount = 0;
+LineChangedCount = 0;
+
+CurrentPath = "Undefined";
+CurrentLine = -1;
+
 
 # Functions
 
@@ -62,11 +62,37 @@ lineChangedCount = 0;
 # PrintWarning
 ##################################################
 # Common warning message
+# NOTES:
+#   Expect global variable CurrentPath and CurrentLine to be set before this function is called without these parameters
 # ARGUMENTS:
 #  enumName: Name of the enum for which the warning has been triggered
 #  message: The warning message
-def PrintWarning(enumName, message):
-	print("Warning: Static Distributed Enum '" + enumName + "' " + message);
+#  path: The path of the of the origin of the warning, will use global variable 'CurrentPath' if the argument is ommited
+#  lineNo: The line number of the of the origin of the warning, will use global variable 'CurrentLine' if the argument is ommited
+def PrintWarning(enumName, message, path = None, lineNo = None):
+	if path == None:
+		path = CurrentPath;
+	if lineNo == None:
+		lineNo = CurrentLine;		
+	ErrorHandling.PrintWarning(path, lineNo, "Distributed Enum '" + enumName + "' " + message);
+
+##################################################
+# PrintError
+##################################################
+# Common error message
+# NOTES:
+#   Expect global variable CurrentPath and CurrentLine to be set before this function is called without these parameters
+# ARGUMENTS:
+#  enumName: Name of the enum for which the error has been triggered
+#  message: The warning message
+#  path: The path of the of the origin of the error, will use global variable 'CurrentPath' if the argument is ommited
+#  lineNo: The line number of the of the origin of the error, will use global variable 'CurrentLine' if the argument is ommited
+def PrintError(enumName, message, path = None, lineNo = None):
+	if path == None:
+		path = CurrentPath;
+	if lineNo == None:
+		lineNo = CurrentLine;		
+	ErrorHandling.PrintError(path, lineNo, "Distributed Enum '" + enumName + "' " + message);
 
 ##################################################
 # SearchFolderAndApplyFunction
@@ -85,8 +111,8 @@ def SearchFolderAndApplyFunction(path, functionToApply):
 			SearchFolderAndApplyFunction(os.path.join(path, fileName), functionToApply);
 		else: # Is a file
 			# Is a source file
-			if re.match(sourceFileRegEx, fileName):
-				if fileName not in ignoreFile:
+			if re.match(SourceFileRegEx, fileName):
+				if fileName not in IgnoredFileList:
 					functionToApply(os.path.join(path, fileName));	
 
 ##################################################
@@ -108,14 +134,14 @@ def BuildArgumentListFromCodeString(enumName, argumentString):
 	# Validate argument and parameters 
 	if argumentValueArray[0] == 'COUNT' or argumentValueArray[0] == 'NULLABLE':
 		if len(argumentValueArray) > 2:
-				PrintWarning(enumName, "has bad syntax: Too much parameters for " + argumentValueArray[0] + ". The additional parameters will be ignored.");
-				argumentValueArray = argumentValueArray[0:1];				
+				PrintWarning(enumName, "has too much parameters for " + argumentValueArray[0] + ". The additional parameters will be ignored.");
+				argumentValueArray = argumentValueArray[:1];
 		# Create default Null value enum
 		elif len(argumentValueArray) == 1:
 			if argumentValueArray[0] == 'COUNT':
-				argumentValueArray.append(enumName + "_COUNT");
+				argumentValueArray.append("COUNT");
 			elif argumentValueArray[0] == 'NULLABLE':
-				argumentValueArray.append(enumName + "_NONE");	
+				argumentValueArray.append("NONE");	
 			
 	elif argumentValueArray[0] == 'VALUE':
 		if len(argumentValueArray) < 2:
@@ -130,8 +156,12 @@ def BuildArgumentListFromCodeString(enumName, argumentString):
 					argumentValueArray.pop(index);
 					index -= 1;
 				index += 1;
+	elif argumentValueArray[0] == 'UNIQUE' or argumentValueArray[0] == 'NO_ASSIGNMENT':
+		if len(argumentValueArray) > 1:
+			PrintWarning(enumName, "has too much parameters for " + argumentValueArray[0] + ". The additional parameters will be ignored.");
+			argumentValueArray = argumentValueArray[:0];
 	else:
-		PrintWarning(enumName, "has bad syntax: Unknow argument '" + argumentValueArray[0] + "'. It has been ignored.");
+		PrintWarning(enumName, "has an unknow argument '" + argumentValueArray[0] + "'. It has been ignored.");
 		argumentValueArray = None;
 
 	return argumentValueArray;
@@ -148,8 +178,8 @@ def BuildDistributedEnumValuesFromCode(enumValuesCodeList):
 	enumValueList = []
 	for codeLine in enumValuesCodeList:
 		# ignore comment
-		if re.search(commentBlockRegEx, codeLine) == None:
-			matches = re.findall(enumValueRegEx, codeLine);
+		if re.search(CommentBlockRegEx, codeLine) == None:
+			matches = re.findall(EnumValueRegEx, codeLine);
 			matches = matches[0];
 			enumValue = {};
 			enumValue['value'] = matches[0];
@@ -175,13 +205,14 @@ def FindBuiltDistributedEnum(filePath):
 	
 	# Parse the file
 	file = fileinput.FileInput(filePath);
+		
 	for line in file:
-		matches = re.findall(DistributedEnumDefinitionRegEx, line);
-		if len(matches) > 0: # A static distributed enum has been found
+		matches = re.findall(DistributedEnumDefinitionFullSyntaxRegEx, line);
+		if len(matches) > 0: # A distributed enum has been found
 			matches = matches[0];
 			enumCode[matches[1]] = [];
 			line = file.readline();
-			if re.search(blockStartRegEx, line) != None:
+			if re.search(BlockStartRegEx, line) != None:
 				line = file.readline();
 				while line != "" and re.search(BlockEndRegEx, line) == None:					
 					enumCode[matches[1]].append(line);
@@ -197,7 +228,7 @@ def FindBuiltDistributedEnum(filePath):
 ##################################################
 # Look into the specified code file for distrivuted enum definiton and build a complex
 #   dictionnary in the global variable EnumDictionary with attributes:
-#     srcpath:   Path of the source file
+#     srcPath:   Path of the source file
 #     code:      Attributes that have to do the way the enum was written in code
 #     arguments: The arguments given in the enum definition
 # RETURNS:
@@ -206,44 +237,61 @@ def FindBuiltDistributedEnum(filePath):
 #  filePath: The path of the file to parse for distributed enum definitions
 def FindDistributedEnumDefinition(filePath):
 	global EnumDictionary;
+	global CurrentPath, CurrentLine;
 	
 	# Parse the file
-	for line in fileinput.FileInput(filePath):
-		matches = re.findall(DistributedEnumDefinitionRegEx, line);
-		if len(matches) > 0: # A static distributed enum has been found
-			matches = matches[0];
-			enumDict = {};
-			enumDict['srcpath'] = filePath;
-			enumDict['code'] = {};
-			indentation = 0;
-			while line[indentation] == " ":
-				indentation += 1;
-			enumDict['code']['indentation'] = indentation;
+	sourceCodeFile = fileinput.FileInput(filePath);
+	for line in sourceCodeFile:
+		headerMatches = re.findall(DistributedEnumDefinitionHeaderRegEx, line);
+		if len(headerMatches) > 0: # A distributed enum has been found
+			CurrentPath = filePath;
+			CurrentLine = sourceCodeFile.lineno();			
+			matches = re.findall(DistributedEnumDefinitionFullSyntaxRegEx, line);
+			if len(matches) > 0: # A distributed enum has been found			
+				matches = matches[0];
+				# Verify if the same enum has been found
+				if matches[1] not in EnumDictionary:
+					enumDict = {};
+					enumDict['code'] = {};
+					enumDict['code']['srcPath'] = CurrentPath;
+					enumDict['code']['srcLine'] = CurrentLine;					
+					indentation = 0;
+					while line[indentation] == " ":
+						indentation += 1;
+					enumDict['code']['indentation'] = indentation;
+					enumDict['code']['enumContentLineCount'] = EnumContentLineCount(filePath, matches[1]);
+					
+					# Update dictionnary, so PrintWarning will have the enum data
+					EnumDictionary[matches[1]] = enumDict;				
+					
+					enumDict['arguments'] = {};
+					# It has arguments, build the arguments attributes
+					if len(matches[0].split(',')) > 1:
+						# remove enum name from string
+						allArgumentsString = matches[0][len(matches[1])+1:len(matches[0])];
+						# for each argument
+						for argumentString in allArgumentsString.split(','):
+							argumentList = BuildArgumentListFromCodeString(matches[1], argumentString);
+							if argumentList != None:
+								# Special case, value arguments stacks
+								if argumentList[0] == "VALUE":
+									if "VALUE" not in enumDict['arguments']:
+										enumDict['arguments'][argumentList[0]] = [];
+									enumDict['arguments'][argumentList[0]].extend(argumentList[1:]);
+								else:
+									if argumentList[0] not in enumDict['arguments']:
+										enumDict['arguments'][argumentList[0]] = argumentList[1:];
+									else:
+										PrintWarning(matches[1], "has a duplicate of a non-stacking arguments '" + argumentList[0] + "'. This additional argument will be ignored.");
+									
+					# Update the dictionnary so the definition will be complete
+					EnumDictionary[matches[1]] = enumDict;
+				else:
+					PrintWarning(matches[1], "has a redefinition. A compilation error will be generated.");					
+			else: # Syntax malformed
+				PrintError(headerMatches[0], "has a bad syntax. Could not parse definition, all distributed enum value will not be linked to this definition");
 			
-			# It has arguments, build the arguments attributes
-			if len(matches[0].split(',')) > 0:
-				# remove enum name from string
-				allArgumentsString = matches[0][len(matches[1])+1:len(matches[0])];
-				# for each argument
-				for argumentString in allArgumentsString.split(','):
-					argumentList = BuildArgumentListFromCodeString(matches[1], argumentString);
-					if argumentList != None:
-						if 'arguments' not in enumDict:
-							enumDict['arguments'] = {};
-							
-						# Special case, value arguments stacks
-						if argumentList[0] == "VALUE":
-							if "VALUE" not in enumDict['arguments']:
-								enumDict['arguments'][argumentList[0]] = [];
-							enumDict['arguments'][argumentList[0]].extend(argumentList[1:]);
-						else:
-							if argumentList[0] not in enumDict['arguments']:
-								enumDict['arguments'][argumentList[0]] = argumentList[1:];
-							else:
-								PrintWarning(matches[1], "has a duplicate of a non-stacking arguments '" + argumentList[0] + "'. This additional argument will be ignored.");
-							
-			EnumDictionary[matches[1]] = enumDict;
-			
+				
 ##################################################
 # BuildValueAssignmentTupleFromString
 ##################################################
@@ -266,31 +314,55 @@ def BuildValueAssignmentTupleFromString(enumName, valueString):
 		for i in range(2, len(valueTuple)):
 			valueTuple.pop(2);
 	
-	# Assignme has no value
-	if len(valueTuple) > 1 and valueTuple[1] == "":
-		PrintWarning(enumName, "has a syntax error with the '=' operator for the value '" + valueTuple[0] + "'. Assignment will be ignored.");
-		# Clear empty assigment
-		valueTuple.pop(1);
-	
+	# Assignment validation
+	if len(valueTuple) > 1:
+		if valueTuple[1] == "":
+			PrintWarning(enumName, "has a syntax error with the '=' operator for the value '" + valueTuple[0] + "'. Assignment will be ignored.");
+			# Clear empty assigment
+			valueTuple.pop(1);
+		elif 'NO_ASSIGNMENT' in EnumDictionary[enumName]['arguments']:
+			PrintError(enumName, "has an assignment on value '" + valueTuple[0] + "'. Assignment are not tolerated for this enum since it has the argument 'NO_ASSIGNMENT'.");
+		elif 'UNIQUE' in EnumDictionary[enumName]['arguments'] and re.search(NumberValueRegEx, valueTuple[1]) == None:
+			PrintError(enumName, "has an assignment on value '" + valueTuple[0] + "' to another value '" + valueTuple[1] + "'. Assignments are to be unique for this enum since it has the argument 'UNIQUE'.");						
+		
 	return valueTuple;
+			
+##################################################
+# DoesEnumHasArgument
+##################################################
+# Returns if the specified argument is in the specified enum
+# RETURNS:
+#   True if the argument is in the enum
+# PARAMETERS:
+#   enumName: The name of the enum from which to look in for the argument
+#   argumentName: The name of the argument to look for
+def DoesEnumHasArgument(enumName, argumentName):
+	return argumentName in EnumDictionary[enumName]['arguments'];
 			
 ##################################################
 # ValidateDistributedEnum
 ##################################################
 # Validate all assignment, by making sure they point to a value that exist inside the enum
 def ValidateDistributedEnum():
+	global CurrentPath, CurrentLine;
+	
 	# Validate assignments
 	for enumName in EnumDictionary:
 		enum = EnumDictionary[enumName];
+		assignmentDict = {};
+		numericAssignment = False;
+		
 		# for assignmentValues in enum['values']:
 		for assignmentValueIndex in range(len(enum['values'])):
 			assignmentValues = enum['values'][assignmentValueIndex];
+			CurrentPath = assignmentValues['srcPath']
+			CurrentLine = assignmentValues['srcLine']			
 			# Only assignments
 			if 'assignment' in assignmentValues:
-				valid = False;
+				valid = re.search(NumberValueRegEx, assignmentValues['assignment']) != None;
 				
 				# Skip search if self assignment
-				if assignmentValues['assignment'] != assignmentValues['value']:
+				if not valid and assignmentValues['assignment'] != assignmentValues['value']:
 					# Look for a value that fits the assignment
 					for allValues in enum['values']:
 						if assignmentValues['assignment'] == allValues['value']:
@@ -305,7 +377,23 @@ def ValidateDistributedEnum():
 						PrintWarning(enumName, "has a self assignment on '" + assignmentValues['assignment'] + "'. This assignment will be ignored");
 					# remove assignment
 					enum['values'][assignmentValueIndex].pop('assignment');
-			
+				else:
+					if assignmentValues['assignment'] not in assignmentDict:
+						assignmentDict[assignmentValues['assignment']] = {'generatedError': False, 'valueData': enum['values'][assignmentValueIndex]};
+						# if assignement is to zero and we have a NULLABLE value
+						if re.search(NumberValueRegEx, assignmentValues['assignment']) != None:
+							if int(assignmentValues['assignment']) == 0 and DoesEnumHasArgument(enumName, 'NULLABLE'):
+								PrintError(enumName, "is NULLABLE, but the value '" + assignmentValues['value'] + "' overrides the NULLABLE value. Remove the NULLABLE argument from the distributed enum definition or change the value of '" + assignmentValues['value'] + "' to something non-zero.");
+							if DoesEnumHasArgument(enumName, 'COUNT'):
+								PrintError(enumName, "has the COUNT argument, but the value '" + assignmentValues['value'] + "' sets a numerical value, which make COUNT useless. Remove the numerical assignment or remove the COUNT argument in the distributed enum definition");
+							
+					elif DoesEnumHasArgument(enumName, 'UNIQUE'):
+						if not assignmentDict[assignmentValues['assignment']]['generatedError']:
+							originalValue = assignmentDict[assignmentValues['assignment']]['valueData'];
+							PrintError(enumName, "has an assignment on value '" + assignmentDict[assignmentValues['assignment']]['valueData']['value'] + "' that is a duplicate of another one. Assignments are to be unique for this enum since it has the argument 'UNIQUE'.", originalValue['srcPath'], originalValue['srcLine']);
+							assignmentDict[assignmentValues['assignment']]['generatedError'] = True;						
+						PrintError(enumName, "has an assignment on value '" + assignmentValues['value'] + "' that is a duplicate of another one. Assignments are to be unique for this enum since it has the argument 'UNIQUE'.");						
+				
 ##################################################
 # DoesValueExistsInEnum
 ##################################################
@@ -335,9 +423,16 @@ def DoesValueExistsInEnum(enumName, valueName):
 #  enumName: The name of the enum that contains the value
 #  value:    The value to look for
 #  source:   Source description string
-def AddValueToDistributedEnum(enumName, value, source):
+def AddValueToDistributedEnum(enumName, value, source, srcPath = None, srcLine = None):
 	valueTuple = BuildValueAssignmentTupleFromString(enumName, value);
 	valueDict = {'value': valueTuple[0], 'source': source};
+	if srcPath != None and srcLine != None:
+		valueDict['srcPath'] = srcPath;
+		valueDict['srcLine'] = srcLine;
+	else:
+		valueDict['srcPath'] = EnumDictionary[enumName]['code']['srcPath'];
+		valueDict['srcLine'] = EnumDictionary[enumName]['code']['srcLine'];
+		
 	if len(valueTuple) > 1:
 		valueDict['assignment'] = valueTuple[1];
 		
@@ -354,15 +449,19 @@ def AddValueToDistributedEnum(enumName, value, source):
 #  filePath: The path of the file to parse for values
 def FillDistributedEnum(filePath):
 	global EnumDictionary;
+	global CurrentPath, CurrentLine;
 	
 	# Parse the file
-	for line in fileinput.FileInput(filePath):
+	file = fileinput.FileInput(filePath);
+	for line in file:
 		matches = re.findall(DistributedEnumValueRegEx, line);
-		if len(matches) > 0: # A static distributed enum has been found
+		if len(matches) > 0: # A distributed enum has been found
+			CurrentPath = filePath;
+			CurrentLine = file.lineno();				
 			matches = matches[0];
 			# We have a definition?
 			if matches[0] in EnumDictionary:
-				AddValueToDistributedEnum(matches[0], matches[1], "From file: '" + filePath[len(srcPath):] + "'");
+				AddValueToDistributedEnum(matches[0], matches[1], "From file: '" + filePath[len(CodeSourcePath):] + "'", CurrentPath, CurrentLine);
 			else:
 				PrintWarning(matches[0], "has not been found ignoring enum value '" + matches[1] + "'.");
 
@@ -378,13 +477,24 @@ def FillDistributedEnum(filePath):
 def DistributedEnumValuesDifferenceCount(lhsDistributedEnumValuesList, rhsDistributedEnumValuesList):
 	lhsIndexValue = 0;
 	
+	attributesEqualityList = ['value', 'assignment', 'source'];
+	
 	lhsDistributedEnumValuesList = lhsDistributedEnumValuesList[:]
 	rhsDistributedEnumValuesList = rhsDistributedEnumValuesList[:]
 	
 	while lhsIndexValue < len(lhsDistributedEnumValuesList):
 		rhsIndexValue = 0;
 		while rhsIndexValue < len(rhsDistributedEnumValuesList):
-			if lhsDistributedEnumValuesList[lhsIndexValue] == rhsDistributedEnumValuesList[rhsIndexValue]:
+			equals = True;
+			for attribute in attributesEqualityList:
+				# Does both have the attributes or have it missing?
+				lhsHasAttribute = attribute in lhsDistributedEnumValuesList[lhsIndexValue];
+				rhsHasAttribute = attribute in rhsDistributedEnumValuesList[rhsIndexValue];
+				equals = equals and lhsHasAttribute == rhsHasAttribute
+				# If both have the attribute, check if it has the same value
+				if lhsHasAttribute and rhsHasAttribute:
+					equals = equals and lhsDistributedEnumValuesList[lhsIndexValue][attribute] == rhsDistributedEnumValuesList[rhsIndexValue][attribute]
+			if equals:
 				lhsDistributedEnumValuesList.pop(lhsIndexValue);
 				rhsDistributedEnumValuesList.pop(rhsIndexValue);
 				lhsIndexValue -= 1;
@@ -406,6 +516,8 @@ def DistributedEnumValuesDifferenceCount(lhsDistributedEnumValuesList, rhsDistri
 # ARGUMENTS:
 #  enumName: The name of the enum to extract and sort its values
 def SortEnumValues(enumName):
+	global CurrentPath, CurrentLine;
+	
 	sortedDict = {}; # All sorted values will be include in this dictionnary
 	sortedList = []; # This is the list all sorted out
 	leftToSortList = []; # This is the list of all unsorted values
@@ -416,12 +528,31 @@ def SortEnumValues(enumName):
 	# build leftToSortList
 	for valueIndex in range(len(enum['values'])):
 		# If we have no assignment, then already sorted!
-		if 'assignment' not in enum['values'][valueIndex]:
+		if 'assignment' not in enum['values'][valueIndex] or re.search(NumberValueRegEx, enum['values'][valueIndex]['assignment']) != None:
 			sortedList.append(valueIndex);
 			# Include value in sorted dictionnary
 			sortedDict[enum['values'][valueIndex]['value']] = valueIndex;
 		else:
 			leftToSortList.append(valueIndex);
+	
+	assignmentSortedList	= [];
+	index = 0;
+	while index < len(sortedList):
+		valueToSort = enum['values'][sortedList[index]];
+		if 'assignment' in valueToSort and re.search(NumberValueRegEx, valueToSort['assignment']) != None:
+			sortedIndex = 0;
+			while sortedIndex < len(assignmentSortedList):
+				sortedValue = enum['values'][assignmentSortedList[sortedIndex]];
+				if int(valueToSort['assignment']) <= int(sortedValue['assignment']):
+					break;
+				sortedIndex += 1;
+			assignmentSortedList.insert(sortedIndex, sortedList[index]);
+			sortedList.pop(index);
+			index -= 1;
+		index += 1;
+		
+	assignmentSortedList.extend(sortedList);
+	sortedList = assignmentSortedList;
 
 	# While we still have some unsorted values and we're still making progress toward sorting them
 	while len(leftToSortList) != 0 and lastLeftToSortLength != len(leftToSortList) != 0:
@@ -442,7 +573,10 @@ def SortEnumValues(enumName):
 		
 	# Not all values were sorted :(
 	if len(leftToSortList) > 0:
-		PrintWarning(enumName, "has unsolvable dependency between value. Unsolvable dependency were ignored.");
+		for index in leftToSortList:
+			CurrentPath = enum['values'][index]['srcPath'];
+			CurrentLine = enum['values'][index]['srcLine'];
+			PrintWarning(enumName, "has unsolvable dependency between values on '" + enum['values'][index]['value'] + "'. Unsolvable dependencies were ignored.");
 			
 	# Re-order COUNT and NULL
 	if 'COUNT' in enum['arguments']:
@@ -487,22 +621,95 @@ def SortEnumValues(enumName):
 #  enumName: The name of the enum to convert to code
 def DistributedEnumToCodeString(enumName):
 	baseIndent = " " * EnumDictionary[enumName]['code']['indentation'];
-	indentStep = " " * 3; # 3 Should be taken for VS project?
+	indentStep = " " * SolutionConstants.NUMBER_OF_SPACES_FOR_TABS;
 	
-	staticEnum = EnumDictionary[enumName];
-	staticDistributedString = baseIndent + "{\n";
+	enum = EnumDictionary[enumName];
+	distributedEnumString = baseIndent + "{\n";
 	
 	# For all sorted values index
 	for valueIndex in SortEnumValues(enumName):
-		staticDistributedString += baseIndent + indentStep + staticEnum['values'][valueIndex]['value'];
-		if 'assignment' in staticEnum['values'][valueIndex]:
-			staticDistributedString += " = " + staticEnum['values'][valueIndex]['assignment'];
-		staticDistributedString += ", // " + staticEnum['values'][valueIndex]['source'];
-		staticDistributedString += "\n";
-	staticDistributedString += baseIndent + "}\n";	
-	staticDistributedString += baseIndent + DistributedEnumFooterMacro;	
+		distributedEnumString += baseIndent + indentStep + enum['values'][valueIndex]['value'];
+		if 'assignment' in enum['values'][valueIndex]:
+			distributedEnumString += " = " + enum['values'][valueIndex]['assignment'];
+		distributedEnumString += ", // " + enum['values'][valueIndex]['source'];
+		distributedEnumString += "\n";
+	distributedEnumString += baseIndent + "}\n";	
+	distributedEnumString += baseIndent + DistributedEnumFooterMacro + "\n";	
 	
-	return staticDistributedString;
+	return distributedEnumString;
+
+##################################################
+# EnumContentLineCount
+##################################################
+# Counts the number of line into the enum definition
+# RETURNS:
+#  The number of line, that should be part of the enum. If the syntax if messed up, 
+#    it returns the safer bet and prints a warning
+# ARGUMENTS:
+#  filePath: The path of the source code file
+#  enumName: The name of the distributed enum to count the number of line
+def EnumContentLineCount(filePath, enumName):
+	lineCount = 0;
+	startBlockValid = False;
+	endBlockValid = False;
+	endMacroValid = False;
+	trailingPossibleUnrelatedLineCount = 0;
+	
+	specificDistributedEnumDefinitionFullSyntaxRegEx = re.compile("^\s*" + DistributedEnumHeaderMacro + "\(\s*(" + enumName + "(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)([;])?")	
+	
+	file = fileinput.FileInput(filePath);
+	# Search for the specific enum
+	for line in file:
+		matches = re.findall(specificDistributedEnumDefinitionFullSyntaxRegEx, line);
+		# The specific enum has been found
+		if len(matches) > 0:				
+			matches = matches[0];
+			
+			line = file.readline();			
+			
+			validEnumContent = True;
+			while validEnumContent:
+				validEnumContent = False;
+				# We need a "{" to start the content (and only one)
+				if not startBlockValid and re.search(BlockStartRegEx, line) != None:
+					validEnumContent = startBlockValid = True;
+				
+				# Enum value need to be in a block starting with "{", that hasn't closed 
+				if startBlockValid and not endBlockValid and re.search(EnumValueRegEx, line) != None:
+					validEnumContent = True;
+				
+				# End block value needs to be after a "{" and before the end macro
+				if startBlockValid and not endBlockValid and re.search(BlockEndRegEx, line) != None:
+					validEnumContent = endBlockValid = True;
+				
+				# End macro needs an end block and can only be these once
+				if endBlockValid and not endMacroValid and re.search(DistributedEnumDefinitionEndRegEx, line) != None:
+					endMacroValid = validEnumContent = True;
+				
+				# if nothing was valid, but we have an unrelated line
+				mightBeUnrelatedLine = re.search(EmptyLineRegEx, line) != None or re.search(CommentBlockRegEx, line) != None;
+				if not validEnumContent and mightBeUnrelatedLine:
+					# Take note of the empty line we might have to discard these lines
+					trailingPossibleUnrelatedLineCount += 1
+					validEnumContent = True;
+				elif validEnumContent:
+					# Reset newline counter, these newlines were legit
+					trailingPossibleUnrelatedLineCount = 0;
+				if validEnumContent:
+					lineCount += 1;
+					line = file.readline();
+					if endMacroValid:
+						# End of content
+						break;
+			break;
+			
+	file.close();
+	
+	# Warning message if necessary
+	if not startBlockValid or not endBlockValid or not endMacroValid:
+		ErrorHandling.PrintWarning(CurrentPath, CurrentLine, "Distributed enum '" + enumName + "' has syntax error. Please verify the syntax. Compilation errors might occurs.");
+	
+	return lineCount - trailingPossibleUnrelatedLineCount;
 
 ##################################################
 # InjectDistributedEnum
@@ -511,45 +718,49 @@ def DistributedEnumToCodeString(enumName):
 # ARGUMENTS:
 #  filePath: The path of the file to update distributed enum
 def InjectDistributedEnum(filePath):
-	global lineChangedCount;
+	global LineChangedCount;
+	global CurrentPath, CurrentLine;
 	
 	# Look for existing enum with values
 	currentFileDistributedEnumList = FindBuiltDistributedEnum(filePath);
 	
-	for staticEnum in currentFileDistributedEnumList:
-		lineToChangeCount = DistributedEnumValuesDifferenceCount(currentFileDistributedEnumList[staticEnum], EnumDictionary[staticEnum]['values']);
+	for enum in currentFileDistributedEnumList:
+		lineToChangeCount = DistributedEnumValuesDifferenceCount(currentFileDistributedEnumList[enum], EnumDictionary[enum]['values']);
 		# There are changes
 		if lineToChangeCount > 0:
-			lineChangedCount += lineToChangeCount;
-			specificDistributedEnumDefinitionRegEx = re.compile(DistributedEnumHeaderMacro + "\(\s*(" + staticEnum + "(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)([;])?")
-			file = fileinput.FileInput(filePath, inplace = True);
-			# Search for the specific enum
-			for line in file:
-				matches = re.findall(specificDistributedEnumDefinitionRegEx, line);
-				# The specific enum has been found
-				if len(matches) > 0:
-					matches = matches[0];
-					
-					# Remove trailing semi-colon from static enum definition
-					if matches[6] == ";":
-						line = re.sub(";","", line);
-						lineChangedCount += 1;
+			LineChangedCount += lineToChangeCount;
+			specificDistributedEnumDefinitionFullSyntaxRegEx = re.compile("^\s*" + DistributedEnumHeaderMacro + "\(\s*(" + enum + "(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)([;])?")
+			enumCode = DistributedEnumToCodeString(enum);
+			# is file writable?
+			if (os.stat(filePath)[0] & stat.S_IWRITE): 
+				file = fileinput.FileInput(filePath, inplace = True);
+				# Search for the specific enum
+				for line in file:
+					matches = re.findall(specificDistributedEnumDefinitionFullSyntaxRegEx, line);
+					# The specific enum has been found
+					if len(matches) > 0:
+						CurrentPath = filePath;
+						CurrentLine = file.lineno();					
+						matches = matches[0];
 						
-					# Print header without semi-colob
+						# Remove trailing semi-colon from enum definition
+						if matches[6] == ";":
+							line = re.sub(";","", line);
+							LineChangedCount += 1;
+							
+						# Print header without semi-colon
+						print(line, end="");
+						# Print values
+						print(enumCode, end="");
+						
+						# Skip all content + header
+						for i in range(EnumDictionary[enum]['code']['enumContentLineCount'] + 1):
+							line = file.readline();
+							
+					# Print unrelated line of code to file
 					print(line, end="");
-					# Print values
-					print(DistributedEnumToCodeString(staticEnum), end="");
-					
-					#Skip the last enum values
-					line = file.readline();
-					if re.search(blockStartRegEx, line) != None:
-						line = file.readline();
-						while line != "" and re.search(DistributedEnumDefinitionEndRegEx, line) == None:					
-							line = file.readline();		
-						line = file.readline();
-						
-				# Print unrelated line of code to file
-				print(line, end="");
+			else: # File is read-only
+				ErrorHandling.PrintError(filePath, 0, "Distributed enum definition '" + enum + "' was found in a file that is read-only. Enum values is outdated.");
 		
 ##################################################
 # BuildDistributedEnumDefinition
@@ -557,33 +768,40 @@ def InjectDistributedEnum(filePath):
 # Look through all source files for distributed enum definition and keep these definition in memory
 def BuildDistributedEnumDefinition():
 	# Parse files to find enum definition
-	SearchFolderAndApplyFunction(srcPath, FindDistributedEnumDefinition);
+	SearchFolderAndApplyFunction(CodeSourcePath, FindDistributedEnumDefinition);
 	
 ##################################################
 # BuildDistributedEnumDefinition
 ##################################################
 # Fill all the distributed enum definitions with values from arguments and source files
 def BuildDistributedEnumValues():
-	# Use arguments to start building static enum
-	for staticEnumName in EnumDictionary:
-		EnumDictionary[staticEnumName]['values'] = [];
+	# Use arguments to start building distributed enum
+	for enumName in EnumDictionary:
+		EnumDictionary[enumName]['values'] = [];
 		# fill Enum with default arguments values (NULLABLE and COUNT will be sorted later on to be first and last respectively)
-		if 'NULLABLE' in EnumDictionary[staticEnumName]['arguments']:
-			AddValueToDistributedEnum(staticEnumName, EnumDictionary[staticEnumName]['arguments']['NULLABLE'][0], "Enum definition: NULLABLE");
-		if 'VALUE' in EnumDictionary[staticEnumName]['arguments']:
-			for value in EnumDictionary[staticEnumName]['arguments']['VALUE']:
-				AddValueToDistributedEnum(staticEnumName, value, "Enum definition: VALUE");
-		if 'COUNT' in EnumDictionary[staticEnumName]['arguments']:
-			AddValueToDistributedEnum(staticEnumName, EnumDictionary[staticEnumName]['arguments']['COUNT'][0], "Enum definition: COUNT");				
+		if DoesEnumHasArgument(enumName, 'NULLABLE'):
+			AddValueToDistributedEnum(enumName, EnumDictionary[enumName]['arguments']['NULLABLE'][0], "Enum definition: NULLABLE");
+		if DoesEnumHasArgument(enumName, 'VALUE'):
+			for value in EnumDictionary[enumName]['arguments']['VALUE']:
+				AddValueToDistributedEnum(enumName, value, "Enum definition: VALUE");
+		if DoesEnumHasArgument(enumName, 'COUNT'):
+			AddValueToDistributedEnum(enumName, EnumDictionary[enumName]['arguments']['COUNT'][0], "Enum definition: COUNT");				
 	
 	# Validate argument values
 	ValidateDistributedEnum();
 	
 	# Parse files to build enums
-	SearchFolderAndApplyFunction(srcPath, FillDistributedEnum);
+	SearchFolderAndApplyFunction(CodeSourcePath, FillDistributedEnum);
 	
 	# Validate source values
 	ValidateDistributedEnum();
+	
+	if DoesEnumHasArgument(enumName, 'COUNT'):
+		for valueIndex  in range(len(EnumDictionary[enumName]['values'])):
+			value = EnumDictionary[enumName]['values'][valueIndex];
+			if value['value'] == EnumDictionary[enumName]['arguments']['COUNT'][0]:
+				EnumDictionary[enumName]['values'][valueIndex]['assignment'] = str(len(EnumDictionary[enumName]['values']) - 1);
+				break;
 
 ##################################################
 # InjectDistributedEnums
@@ -591,20 +809,19 @@ def BuildDistributedEnumValues():
 # Inject into the source files the update values if necessary
 def InjectDistributedEnums():
 	# Parse files to build enums
-	SearchFolderAndApplyFunction(srcPath, InjectDistributedEnum);	
+	SearchFolderAndApplyFunction(CodeSourcePath, InjectDistributedEnum);	
 	
 #############################################
 ################## MAIN #####################
 #############################################
 
-# Inject static incrementator
 BuildDistributedEnumDefinition();
 BuildDistributedEnumValues();
 InjectDistributedEnums();
 	
 # Generate Output Text
 print("Distributed Enum Ouput: ", end = "");
-if lineChangedCount > 0:
-	print(str(lineChangedCount) + " line(s) changed");
+if LineChangedCount > 0:
+	print(str(LineChangedCount) + " line(s) changed");
 else:
 	print("No line changed");
