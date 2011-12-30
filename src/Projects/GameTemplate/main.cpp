@@ -17,9 +17,6 @@ namespace IncrementatorTypeEnum
    };
 }
 
-DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, VALUE_B);
-DISTRIBUTED_ENUM(FIRST_DISTRIBUTED_ENUM, FROM_GAMETEMPLATE);
-
 static bool MainLoop()
 {
    static const IncrementatorType Tbb = STATIC_INCREMENTATOR(Testb,0); 
@@ -36,5 +33,5 @@ int main( )
 {
    GameEngine::GameEngineCore gameEngine = GameEngine::GameEngineCore(MainLoop);
 
-   gameEngine.StartEngine();
+   gameEngine.StartEngine(); 
 }

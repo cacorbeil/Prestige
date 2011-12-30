@@ -796,12 +796,13 @@ def BuildDistributedEnumValues():
 	# Validate source values
 	ValidateDistributedEnum();
 	
-	if DoesEnumHasArgument(enumName, 'COUNT'):
-		for valueIndex  in range(len(EnumDictionary[enumName]['values'])):
-			value = EnumDictionary[enumName]['values'][valueIndex];
-			if value['value'] == EnumDictionary[enumName]['arguments']['COUNT'][0]:
-				EnumDictionary[enumName]['values'][valueIndex]['assignment'] = str(len(EnumDictionary[enumName]['values']) - 1);
-				break;
+	for enumName in EnumDictionary:
+		if DoesEnumHasArgument(enumName, 'COUNT'):
+			for valueIndex  in range(len(EnumDictionary[enumName]['values'])):
+				value = EnumDictionary[enumName]['values'][valueIndex];
+				if value['value'] == EnumDictionary[enumName]['arguments']['COUNT'][0]:
+					EnumDictionary[enumName]['values'][valueIndex]['assignment'] = str(len(EnumDictionary[enumName]['values']) - 1);
+					break;
 
 ##################################################
 # InjectDistributedEnums
@@ -814,7 +815,6 @@ def InjectDistributedEnums():
 #############################################
 ################## MAIN #####################
 #############################################
-
 BuildDistributedEnumDefinition();
 BuildDistributedEnumValues();
 InjectDistributedEnums();
