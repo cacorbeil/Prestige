@@ -4,6 +4,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include "GameEngine/Util/Incrementator.h"
+
 namespace GameEngine
 {
    GameEngineCore::GameEngineCore(GameEngine::GAME_LOOP_FUNC apGameLoopFunction)

@@ -3,9 +3,6 @@
 
 #include "GameEngine/Macros/DLL.h"
 
-#include "GameEngine/Util/Incrementator.h"
-#include "GameEngine/Util/DistributedEnum.h"
-
 namespace GameEngine
 {
    typedef bool(*GAME_LOOP_FUNC)(void); 
@@ -21,7 +18,6 @@ namespace GameEngine
       };
    }
 
-   //template<class GAME_LOOP_FUNCTOR>
    class DLL_DECL GameEngineCore
    {
    public:
@@ -39,8 +35,6 @@ namespace GameEngine
       long long mFrameCount;
       GAME_LOOP_FUNC mpGameLoopFunction;  
    };
-
-   //#include "GameEngineCore.cpp"
 }
 
 #endif //GAME_ENGINE_CORE_H
