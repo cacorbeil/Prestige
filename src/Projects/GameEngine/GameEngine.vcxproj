@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assert\Assert.h" />
     <ClInclude Include="Core\GameEngineCore.h" />
     <ClInclude Include="Macros\DLL.h" />
     <ClInclude Include="Util\Incrementator.h" />
     <ClInclude Include="Util\DistributedEnum.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Assert\CustomAssertFunction.cpp" />
     <ClCompile Include="Core\GameEngineCore.cpp" />
     <ClCompile Include="DllMain.cpp" />
   </ItemGroup>

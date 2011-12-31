@@ -10,6 +10,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{b6b62877-c02e-4aa6-a920-429dd1403f99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assert">
+      <UniqueIdentifier>{f2ddd391-db92-4245-acbd-5215052208fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameEngineCore.h">
@@ -24,11 +27,17 @@
     <ClInclude Include="Util\DistributedEnum.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Assert\Assert.h">
+      <Filter>Assert</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\GameEngineCore.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Assert\CustomAssertFunction.cpp">
+      <Filter>Assert</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
