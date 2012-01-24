@@ -1,20 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{cae5a814-1b15-42f6-9ece-88ad9497b77f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Macros">
       <UniqueIdentifier>{b292a5d2-fad6-4fbe-9947-1ed3367c204e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{b6b62877-c02e-4aa6-a920-429dd1403f99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine">
+      <UniqueIdentifier>{cae5a814-1b15-42f6-9ece-88ad9497b77f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{2bb8c184-1e03-4703-a080-d73024c78f9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\TaskGraph">
+      <UniqueIdentifier>{007a713b-14fc-4499-abd8-908b1fb8b1a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\GameEngineCore.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Macros\DLL.h">
       <Filter>Macros</Filter>
     </ClInclude>
@@ -24,11 +27,53 @@
     <ClInclude Include="Util\DistributedEnum.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Engine.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\IncrementatorEnum.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\TaskGraph.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scheduler.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\TaskNode.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\ModuleDictionnary.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\TaskGraph\TaskCallback.h">
+      <Filter>Modules\TaskGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\IEngineModule.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\IModule.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\GameEngineCore.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Core\Engine.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\TaskNode.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\ModuleDictionnary.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scheduler.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\TaskGraph.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\IEngineModule.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,37 +1,34 @@
-#define DLL_EXPORT
+#include "GameEngine/Core/Engine.h"
 
-#include "GameEngine/Core/GameEngineCore.h"
-#include "GameEngine/Util/Incrementator.h"
-
-#include <time.h>
-#include <iostream> 
-
+#include <iostream>
 #include "ParticleManager.h"
+#include <functional>
+#include <algorithm>
 
-namespace IncrementatorTypeEnum
+static bool MainLoop(float aDeltaTime);
+
+GameEngine::Engine gameEngine(MainLoop);
+
+typedef void (ParticleManager::*TASK_FUNCTION2)(float);
+
+static bool MainLoop(float aDeltaTime)
 {
-   enum ENUM
+   std::cout << "Frame delta time: " << aDeltaTime << std::endl;
+
+   //ParticleManager::GetInstance();
+
+   if(gameEngine.GetCurrentFrameId() == 120)
    {
-      GAME_LOOP = GameEngine::IncrementatorTypeEnum::INCREMENTOR_GAME_FOLLOW_UP,
-      SPECIFIC, 
-   };
-}
-
-static bool MainLoop()
-{
-   static const IncrementatorType Tbb = STATIC_INCREMENTATOR(Testb,0); 
-
-   clock_t before = clock();
-   //ParticleManager::GetInstance()->Update(0.033f);
-   std::cout << "Time elapsed: " << (clock() - before) << std::endl;
+      gameEngine.FlagEvent(ENGINE_EVENT::QUIT);
+   }
 
    return true;
 }
 
-
-int main( )
+int main() 
 {
-   GameEngine::GameEngineCore gameEngine = GameEngine::GameEngineCore(MainLoop);
-
-   gameEngine.StartEngine(); 
+   gameEngine.RegisterModule(*ParticleManager::GetInstance());
+   gameEngine.StartEngine();
 }
+
+

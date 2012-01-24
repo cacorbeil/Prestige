@@ -180,14 +180,16 @@ def BuildDistributedEnumValuesFromCode(enumValuesCodeList):
 		# ignore comment
 		if re.search(CommentBlockRegEx, codeLine) == None:
 			matches = re.findall(EnumValueRegEx, codeLine);
-			matches = matches[0];
-			enumValue = {};
-			enumValue['value'] = matches[0];
-			enumValue['source'] = matches[3];
-			if matches[2] != "":
-				enumValue['assignment'] = matches[2];
-			
-			enumValueList.append(enumValue)
+			#if line is not garbage
+			if len(matches) > 0:
+				matches = matches[0];
+				enumValue = {};
+				enumValue['value'] = matches[0];
+				enumValue['source'] = matches[3];
+				if matches[2] != "":
+					enumValue['assignment'] = matches[2];
+				
+				enumValueList.append(enumValue)
 			
 	return enumValueList;
 
@@ -393,7 +395,10 @@ def ValidateDistributedEnum():
 							PrintError(enumName, "has an assignment on value '" + assignmentDict[assignmentValues['assignment']]['valueData']['value'] + "' that is a duplicate of another one. Assignments are to be unique for this enum since it has the argument 'UNIQUE'.", originalValue['srcPath'], originalValue['srcLine']);
 							assignmentDict[assignmentValues['assignment']]['generatedError'] = True;						
 						PrintError(enumName, "has an assignment on value '" + assignmentValues['value'] + "' that is a duplicate of another one. Assignments are to be unique for this enum since it has the argument 'UNIQUE'.");						
-				
+		
+		if len(enum['values']) == 0:
+			PrintWarning(enumName, "has no value. A default value have been added. It will be removed when a first value will be added");
+			AddValueToDistributedEnum(enumName, "COMPILATION_FIX_ENUM_VALUE", "Generated because the enum had no value");
 ##################################################
 # DoesValueExistsInEnum
 ##################################################
@@ -706,7 +711,7 @@ def EnumContentLineCount(filePath, enumName):
 	file.close();
 	
 	# Warning message if necessary
-	if not startBlockValid or not endBlockValid or not endMacroValid:
+	if startBlockValid and (not endBlockValid or not endMacroValid):
 		ErrorHandling.PrintWarning(CurrentPath, CurrentLine, "Distributed enum '" + enumName + "' has syntax error. Please verify the syntax. Compilation errors might occurs.");
 	
 	return lineCount - trailingPossibleUnrelatedLineCount;
@@ -727,7 +732,7 @@ def InjectDistributedEnum(filePath):
 	for enum in currentFileDistributedEnumList:
 		lineToChangeCount = DistributedEnumValuesDifferenceCount(currentFileDistributedEnumList[enum], EnumDictionary[enum]['values']);
 		# There are changes
-		if lineToChangeCount > 0:
+		if lineToChangeCount > 0 or EnumDictionary[enum]['code']['enumContentLineCount'] == 0:
 			LineChangedCount += lineToChangeCount;
 			specificDistributedEnumDefinitionFullSyntaxRegEx = re.compile("^\s*" + DistributedEnumHeaderMacro + "\(\s*(" + enum + "(\s*\,\s*([a-zA-Z0-9\_\|]+?)|(VALUE\s*(|\s*([a-zA-Z0-9\_\|]+?\s*[=]\s*[a-zA-Z0-9\_\|]+?)+)?))*)\s*\)([;])?")
 			enumCode = DistributedEnumToCodeString(enum);
@@ -786,9 +791,6 @@ def BuildDistributedEnumValues():
 				AddValueToDistributedEnum(enumName, value, "Enum definition: VALUE");
 		if DoesEnumHasArgument(enumName, 'COUNT'):
 			AddValueToDistributedEnum(enumName, EnumDictionary[enumName]['arguments']['COUNT'][0], "Enum definition: COUNT");				
-	
-	# Validate argument values
-	ValidateDistributedEnum();
 	
 	# Parse files to build enums
 	SearchFolderAndApplyFunction(CodeSourcePath, FillDistributedEnum);

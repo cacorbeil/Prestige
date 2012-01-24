@@ -3,24 +3,32 @@
 
 #include <iostream>
 
+#include "GameEngine/Modules/IModule.h"
 #include "Particle.h"
 
-class ParticleManager
+void test(float) {}
+
+class ParticleManager : public IModule<ParticleManager>
 {
 public:
    static ParticleManager* GetInstance();
    static const unsigned int kMAX_NUMBER_OF_PARTICLES;
 
    ParticleManager(unsigned int aNumParticle);
-   void Update(float fClock);
-private:
+
+   virtual void GetTasks(TaskGraph& arTaskGraphContainer);
+   
+//private:
    static ParticleManager* Instance;
 
    unsigned int mNumParticles;
    Particle* mParticles;
+
+   void Update(float fClock);
+   void Update2(float fClock);
 };
 
-const unsigned int ParticleManager::kMAX_NUMBER_OF_PARTICLES = 5 * 1024 * 1024;
+const unsigned int ParticleManager::kMAX_NUMBER_OF_PARTICLES = 5 * 1024;
 
 ParticleManager* ParticleManager::Instance = 0;
 
@@ -69,6 +77,26 @@ void ParticleManager::Update(float fClock)
          p.mVelocity= p.mVelocity*dampVelocity;
       }
    }
+
+   std::cout << "done" << std::endl;
+}
+
+void ParticleManager::Update2(float t)
+{
+   // Not doing anything :D
+   std::cout << "Particle Manager time waster" << std::endl;
+}
+
+void ParticleManager::GetTasks(TaskGraph& arTaskGraphContainer)
+{
+   std::vector<TaskFunctionNode> parent;
+   for(int i = 0; i != 500; ++i)
+   {
+      TaskFunctionNode parentTask(arTaskGraphContainer.Add(CreateTask(&ParticleManager::Update2)));
+      parent.push_back(parentTask);
+   }
+   
+   arTaskGraphContainer.Add(CreateTask(&ParticleManager::Update), parent);
 }
 
 #endif

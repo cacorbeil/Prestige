@@ -11,14 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\GameEngineCore.h" />
+    <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Scheduler.h" />
     <ClInclude Include="Macros\DLL.h" />
+    <ClInclude Include="Modules\IEngineModule.h" />
+    <ClInclude Include="Modules\IModule.h" />
+    <ClInclude Include="Modules\ModuleDictionnary.h" />
+    <ClInclude Include="Modules\TaskGraph\TaskCallback.h" />
+    <ClInclude Include="Modules\TaskNode.h" />
+    <ClInclude Include="Modules\TaskGraph.h" />
     <ClInclude Include="Util\Incrementator.h" />
     <ClInclude Include="Util\DistributedEnum.h" />
+    <ClInclude Include="Util\IncrementatorEnum.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\GameEngineCore.cpp" />
+    <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Scheduler.cpp" />
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Modules\IEngineModule.cpp" />
+    <ClCompile Include="Modules\ModuleDictionnary.cpp" />
+    <ClCompile Include="Modules\TaskGraph.cpp" />
+    <ClCompile Include="Modules\TaskNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,10 +87,12 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DLL_EXPORT;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <Lib />
     <PreBuildEvent>
@@ -94,7 +109,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DLL_EXPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
