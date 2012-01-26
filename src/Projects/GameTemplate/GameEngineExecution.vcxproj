@@ -69,13 +69,13 @@
       </ForceSymbolReferences>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -97,13 +97,13 @@
       <AdditionalDependencies>$(OutDir)/GameEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PreBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PreLinkEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\GameBuildEvents\PostBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/GameBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

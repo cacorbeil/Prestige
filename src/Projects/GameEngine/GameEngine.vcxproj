@@ -96,13 +96,13 @@
     </Link>
     <Lib />
     <PreBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -116,13 +116,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreLinkEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PostBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
