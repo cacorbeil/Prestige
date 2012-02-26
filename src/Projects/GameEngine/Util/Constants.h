@@ -1,0 +1,1 @@
+#define BIT_IN_BYTES 8

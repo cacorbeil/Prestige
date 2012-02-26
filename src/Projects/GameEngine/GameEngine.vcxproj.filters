@@ -54,6 +54,12 @@
     <ClInclude Include="Modules\IModule.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Util\BitField.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Constants.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -74,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="Modules\IEngineModule.cpp">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\BitField.inl">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
