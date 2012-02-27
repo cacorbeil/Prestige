@@ -1,7 +1,7 @@
 #ifdef BIT_FIELD_H
 
 template<int N>
-BitField<N>::BitField()
+StaticBitField<N>::StaticBitField()
 {
    // Clear all bits
    for(int i = 0; i != NUMBER_OF_SECTORS; ++i)
@@ -11,7 +11,7 @@ BitField<N>::BitField()
 }
 
 template <int N>
-void BitField<N>::Flag(unsigned int aFieldPosition, bool aFlagValue /* = true*/)
+void StaticBitField<N>::Flag(unsigned int aFieldPosition, bool aFlagValue /* = true*/)
 {
    //ASSERT_RETURN(aFieldPosition < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high", false);
    if(!(aFieldPosition < BIT_PER_SECTOR * NUMBER_OF_SECTORS))
@@ -36,7 +36,7 @@ void BitField<N>::Flag(unsigned int aFieldPosition, bool aFlagValue /* = true*/)
 }
 
 template <int N>
-bool BitField<N>::GetValue(unsigned int aFieldPosition) const
+bool StaticBitField<N>::GetValue(FlagId aFieldPosition) const
 {
    //ASSERT(aFieldPosition < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high");
    if(!(aFieldPosition < BIT_PER_SECTOR * NUMBER_OF_SECTORS))

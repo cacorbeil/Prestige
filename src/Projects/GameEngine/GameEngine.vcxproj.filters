@@ -16,6 +16,12 @@
     <Filter Include="Modules\TaskGraph">
       <UniqueIdentifier>{007a713b-14fc-4499-abd8-908b1fb8b1a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util\Memory">
+      <UniqueIdentifier>{a620938c-ffca-4f10-a11d-1cf834629d5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\BitField">
+      <UniqueIdentifier>{69118dec-70b2-40cf-aa9d-b9162c17e49d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros\DLL.h">
@@ -54,11 +60,17 @@
     <ClInclude Include="Modules\IModule.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Util\BitField.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\Constants.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Memory\BaseMemoryPool.h">
+      <Filter>Util\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\BitField\DynamicBitField.h">
+      <Filter>Util\BitField</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\BitField\StaticBitField.h">
+      <Filter>Util\BitField</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,8 +93,16 @@
     <ClCompile Include="Modules\IEngineModule.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Util\BitField.inl">
-      <Filter>Util</Filter>
+    <ClCompile Include="Util\Memory\BaseMemoryPool.cpp">
+      <Filter>Util\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Util\BitField\DynamicBitField.cpp">
+      <Filter>Util\BitField</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Util\BitField\StaticBitField.inl">
+      <Filter>Util\BitField</Filter>
+    </None>
   </ItemGroup>
 </Project>

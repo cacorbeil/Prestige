@@ -20,11 +20,13 @@
     <ClInclude Include="Modules\TaskGraph\TaskCallback.h" />
     <ClInclude Include="Modules\TaskNode.h" />
     <ClInclude Include="Modules\TaskGraph.h" />
-    <ClInclude Include="Util\BitField.h" />
+    <ClInclude Include="Util\BitField\DynamicBitField.h" />
+    <ClInclude Include="Util\BitField\StaticBitField.h" />
     <ClInclude Include="Util\Constants.h" />
     <ClInclude Include="Util\Incrementator.h" />
     <ClInclude Include="Util\DistributedEnum.h" />
     <ClInclude Include="Util\IncrementatorEnum.h" />
+    <ClInclude Include="Util\Memory\BaseMemoryPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp" />
@@ -34,7 +36,8 @@
     <ClCompile Include="Modules\ModuleDictionnary.cpp" />
     <ClCompile Include="Modules\TaskGraph.cpp" />
     <ClCompile Include="Modules\TaskNode.cpp" />
-    <ClCompile Include="Util\BitField.inl" />
+    <ClCompile Include="Util\BitField\DynamicBitField.cpp" />
+    <ClCompile Include="Util\Memory\BaseMemoryPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,6 +45,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Util\BitField\StaticBitField.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}</ProjectGuid>
