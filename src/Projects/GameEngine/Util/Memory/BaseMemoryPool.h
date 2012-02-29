@@ -1,7 +1,7 @@
 #ifndef BASE_MEMORY_POOL_H
 #define BASE_MEMORY_POOL_H
 
-#include "GameEngine/Util/BitField/DynamicBitField.h"
+#include "GameEngine/Util/BitField/SlotManager.h"
 
 #include <stdlib.h>
 
@@ -19,7 +19,7 @@ public:
 
 protected:
    void*             mMemoryBlock;
-   DynamicBitField   mFreeSector;
+   SlotManager       mFreeSector;
    SectorIndex       mSectorSize;
    size_t         mMemoryBlockSize;
 private:

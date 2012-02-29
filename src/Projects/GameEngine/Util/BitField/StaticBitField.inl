@@ -6,7 +6,7 @@ StaticBitField<N>::StaticBitField()
    // Clear all bits
    for(int i = 0; i != NUMBER_OF_SECTORS; ++i)
    {
-      mBitFieldsSectors[i] = 0;
+      mFieldSectors[i] = 0;
    }
 }
 
@@ -27,11 +27,11 @@ void StaticBitField<N>::Flag(unsigned int aFieldPosition, bool aFlagValue /* = t
    // Activate flag
    if(aFlagValue)
    {
-      mBitFieldsSectors[sectorId] |= mask;
+      mFieldSectors[sectorId] |= mask;
    }
    else // Deactivate flag
    {
-      mBitFieldsSectors[sectorId] &= ~mask;
+      mFieldSectors[sectorId] &= ~mask;
    }
 }
 
@@ -49,7 +49,7 @@ bool StaticBitField<N>::GetValue(FlagId aFieldPosition) const
 
    FlagSector mask = 1 << aFieldPosition;
 
-  return !!(mBitFieldsSectors[sectorId] & mask);
+  return !!(mFieldSectors[sectorId] & mask);
 }
 
 #endif // BIT_FIELD_H

@@ -1,1 +1,2 @@
-#define BIT_IN_BYTES 8
+#define NULL 0
+#define BIT_PER_BYTE 8

@@ -21,6 +21,7 @@
     <ClInclude Include="Modules\TaskNode.h" />
     <ClInclude Include="Modules\TaskGraph.h" />
     <ClInclude Include="Util\BitField\DynamicBitField.h" />
+    <ClInclude Include="Util\BitField\SlotManager.h" />
     <ClInclude Include="Util\BitField\StaticBitField.h" />
     <ClInclude Include="Util\Constants.h" />
     <ClInclude Include="Util\Incrementator.h" />
@@ -37,6 +38,7 @@
     <ClCompile Include="Modules\TaskGraph.cpp" />
     <ClCompile Include="Modules\TaskNode.cpp" />
     <ClCompile Include="Util\BitField\DynamicBitField.cpp" />
+    <ClCompile Include="Util\BitField\SlotManager.cpp" />
     <ClCompile Include="Util\Memory\BaseMemoryPool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Util\BitField\DynamicBitField.inl" />
     <None Include="Util\BitField\StaticBitField.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

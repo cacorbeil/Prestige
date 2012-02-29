@@ -3,6 +3,8 @@
 
 #include "GameEngine/Util/Constants.h"
 
+// Free bit are 0's
+// Locked bit are 1's
 class DynamicBitField
 {
 public:
@@ -13,18 +15,20 @@ public:
    DynamicBitField(BitId aSize);
    ~DynamicBitField();
 
+   void Resize(BitId aSize);
    void SetValue(BitId aFieldPosition, bool aBitValue);
    bool GetValue(BitId aFieldPosition) const;
-
-   bool HasFree() const;
-   BitId GetFree() const;
    
+   inline BitId GetCount() const;
+
 protected:
-   static const SectorId BIT_PER_SECTOR = (sizeof(FieldSector) * BIT_IN_BYTES);
-   FieldSector*   mBitFieldsSectors; // As long as we need it to fit all these flags
-   BitId          mBitFieldCount;
+   static const SectorId BIT_PER_SECTOR = (sizeof(FieldSector) * BIT_PER_BYTE);
+   FieldSector*   mFieldSectors; // As long as we need it to fit all these flags
+   BitId          mBitCount;
+   SectorId       mSectorCount;
 private:
-   SectorId mNumberOfSector;
 };
+
+#include "DynamicBitField.inl"
 
 #endif DYNAMIC_BIT_FIELD_H

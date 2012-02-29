@@ -72,6 +72,9 @@
     <ClInclude Include="Util\BitField\StaticBitField.h">
       <Filter>Util\BitField</Filter>
     </ClInclude>
+    <ClInclude Include="Util\BitField\SlotManager.h">
+      <Filter>Util\BitField</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -99,9 +102,15 @@
     <ClCompile Include="Util\BitField\DynamicBitField.cpp">
       <Filter>Util\BitField</Filter>
     </ClCompile>
+    <ClCompile Include="Util\BitField\SlotManager.cpp">
+      <Filter>Util\BitField</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Util\BitField\StaticBitField.inl">
+      <Filter>Util\BitField</Filter>
+    </None>
+    <None Include="Util\BitField\DynamicBitField.inl">
       <Filter>Util\BitField</Filter>
     </None>
   </ItemGroup>

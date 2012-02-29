@@ -16,9 +16,9 @@ public:
    void Flag(FlagId aFieldPosition, bool aFlagValue = true);
    bool GetValue(FlagId aFieldPosition) const;
 protected:
-   static const SectorId BIT_PER_SECTOR = (sizeof(FlagSector) * BIT_IN_BYTES);
+   static const SectorId BIT_PER_SECTOR = (sizeof(FlagSector) * BIT_PER_BYTE);
    static const SectorId NUMBER_OF_SECTORS = ((N - 1) / BIT_PER_SECTOR) + 1;
-   FlagSector mBitFieldsSectors[NUMBER_OF_SECTORS]; // As long as we need it to fit all these flags
+   FlagSector mFieldSectors[NUMBER_OF_SECTORS]; // As long as we need it to fit all these flags
 };
 
 #include "StaticBitField.inl"
