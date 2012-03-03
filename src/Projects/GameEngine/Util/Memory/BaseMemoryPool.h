@@ -2,6 +2,7 @@
 #define BASE_MEMORY_POOL_H
 
 #include "GameEngine/Util/BitField/SlotManager.h"
+#include "GameEngine/Math/Bounds.h"
 
 #include <stdlib.h>
 
@@ -17,13 +18,24 @@ public:
    void* Alloc();
    void Free(void* p);
 
+   inline void* Get(SectorIndex index);
+
+   inline SectorIndex GetSize() const;
+   void Resize(SectorIndex aSectorCount);
+
 protected:
    void*             mMemoryBlock;
    SlotManager       mFreeSector;
    SectorIndex       mSectorSize;
-   size_t         mMemoryBlockSize;
+   size_t            mMemoryBlockSize;
 private:
+   inline void* GetMemoryAddress(SectorIndex index) const;
 
+#ifdef DEBUG
+   void InvalidateMemoryAddress(SectorIndex index);
+#endif
 };
+
+#include "BaseMemoryPool.inl"
 
 #endif BASE_MEMORY_POOL_H

@@ -19,7 +19,14 @@ void DynamicBitField::Resize(BitId aSize)
    BitId          originalBitCount = mBitCount;
    SectorId       originalSectorCount = mSectorCount;
 
-   mSectorCount = ((aSize - 1) / BIT_PER_SECTOR) + 1;
+   mSectorCount = 0;
+
+   // Don't allocate sector if size is zero
+   if(aSize != 0)
+   {
+      mSectorCount = ((aSize - 1) / BIT_PER_SECTOR) + 1;
+   }
+
    mBitCount = aSize;
 
    //Initialize bit field sectors

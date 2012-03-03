@@ -14,6 +14,7 @@
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\Scheduler.h" />
     <ClInclude Include="Macros\DLL.h" />
+    <ClInclude Include="Math\Bounds.h" />
     <ClInclude Include="Modules\IEngineModule.h" />
     <ClInclude Include="Modules\IModule.h" />
     <ClInclude Include="Modules\ModuleDictionnary.h" />
@@ -51,6 +52,7 @@
   <ItemGroup>
     <None Include="Util\BitField\DynamicBitField.inl" />
     <None Include="Util\BitField\StaticBitField.inl" />
+    <None Include="Util\Memory\BaseMemoryPool.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}</ProjectGuid>

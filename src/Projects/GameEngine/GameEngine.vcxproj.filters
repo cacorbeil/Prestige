@@ -22,6 +22,9 @@
     <Filter Include="Util\BitField">
       <UniqueIdentifier>{69118dec-70b2-40cf-aa9d-b9162c17e49d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{001d3e01-bbc1-4534-8f37-ce2568880dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros\DLL.h">
@@ -75,6 +78,9 @@
     <ClInclude Include="Util\BitField\SlotManager.h">
       <Filter>Util\BitField</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Bounds.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -112,6 +118,9 @@
     </None>
     <None Include="Util\BitField\DynamicBitField.inl">
       <Filter>Util\BitField</Filter>
+    </None>
+    <None Include="Util\Memory\BaseMemoryPool.inl">
+      <Filter>Util\Memory</Filter>
     </None>
   </ItemGroup>
 </Project>
