@@ -9,6 +9,7 @@ SET DocumentGeneratorDirectory=%ProjectDirectory%..\..\..\thirdparty\doxygen\
 SET DocumentGeneratorExecutable=doxygen.exe
 SET DocumentationGenerationSettingsFilePath=%DocumentGeneratorDirectory%CommonSettings
 
+MKDIR %ProjectDocumentationOutputDirectory%
 SET Command=( type %DocumentationGenerationSettingsFilePath% ^
 				^& echo INPUT=%ProjectDirectory% ^
 				^& echo PROJECT_NUMBER=%ProjectVersion% ^
