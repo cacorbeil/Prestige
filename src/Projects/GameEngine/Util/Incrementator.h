@@ -1,3 +1,5 @@
+#include "IncrementatorEnum.h"
+
 #ifndef INCREMENTATOR_H
 #define INCREMENTATOR_H
 

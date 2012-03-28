@@ -11,16 +11,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Assert\Assert.h" />
-    <ClInclude Include="Core\GameEngineCore.h" />
+    <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Scheduler.h" />
     <ClInclude Include="Macros\DLL.h" />
+    <ClInclude Include="Modules\IEngineModule.h" />
+    <ClInclude Include="Modules\IModule.h" />
+    <ClInclude Include="Modules\ModuleDictionnary.h" />
+    <ClInclude Include="Modules\TaskGraph\TaskCallback.h" />
+    <ClInclude Include="Modules\TaskNode.h" />
+    <ClInclude Include="Modules\TaskGraph.h" />
     <ClInclude Include="Util\Incrementator.h" />
     <ClInclude Include="Util\DistributedEnum.h" />
+    <ClInclude Include="Util\IncrementatorEnum.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Assert\CustomAssertFunction.cpp" />
-    <ClCompile Include="Core\GameEngineCore.cpp" />
+    <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Scheduler.cpp" />
     <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="Modules\IEngineModule.cpp" />
+    <ClCompile Include="Modules\ModuleDictionnary.cpp" />
+    <ClCompile Include="Modules\TaskGraph.cpp" />
+    <ClCompile Include="Modules\TaskNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -76,40 +87,42 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DLL_EXPORT;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <Lib />
     <PreBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DLL_EXPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreBuildEvent>
     <PreLinkEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PreLinkEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PreLinkEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>"$(SolutionDir)\..\tools\BuildEvents\EngineBuildEvents\PostBuildEvent\Event.bat" "$(SolutionDir)"</Command>
+      <Command>"$(SolutionDir)../Tools/BuildEvents/EngineBuildEvents/PostBuildEvent/Event.bat" "$(SolutionDir)" "$(ProjectDir)" "$(ProjectName)" "$(ConfigurationName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
