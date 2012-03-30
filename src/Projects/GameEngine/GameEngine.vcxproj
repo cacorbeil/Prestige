@@ -20,6 +20,7 @@
     <ClInclude Include="Modules\TaskGraph\TaskCallback.h" />
     <ClInclude Include="Modules\TaskNode.h" />
     <ClInclude Include="Modules\TaskGraph.h" />
+	<ClInclude Include="Util\Assert\Assert.h" />
     <ClInclude Include="Util\Incrementator.h" />
     <ClInclude Include="Util\DistributedEnum.h" />
     <ClInclude Include="Util\IncrementatorEnum.h" />
@@ -32,6 +33,7 @@
     <ClCompile Include="Modules\ModuleDictionnary.cpp" />
     <ClCompile Include="Modules\TaskGraph.cpp" />
     <ClCompile Include="Modules\TaskNode.cpp" />
+	<ClCompile Include="Util\Assert\CustomAssertFunction.inl" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

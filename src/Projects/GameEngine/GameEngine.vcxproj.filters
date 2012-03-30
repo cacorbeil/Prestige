@@ -16,6 +16,9 @@
     <Filter Include="Modules\TaskGraph">
       <UniqueIdentifier>{007a713b-14fc-4499-abd8-908b1fb8b1a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util\Assert">
+      <UniqueIdentifier>{59ed8b76-c44c-40f0-a792-93e8b9f19bce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros\DLL.h">
@@ -54,6 +57,9 @@
     <ClInclude Include="Modules\IModule.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Util\Assert\Assert.h">
+      <Filter>Util\Assert</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -74,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="Modules\IEngineModule.cpp">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Assert\CustomAssertFunction.inl">
+      <Filter>Util\Assert</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

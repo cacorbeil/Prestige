@@ -1,4 +1,5 @@
 #include "GameEngine/Core/Engine.h"
+#include "GameEngine/Assert/Assert.h"
 
 #include <iostream>
 #include "ParticleManager.h"
@@ -27,6 +28,12 @@ static bool MainLoop(float aDeltaTime)
 
 int main() 
 {
+   Assert(1 == 0, "before");
+   for (int i = 0; i < 10; ++i)
+   {
+      Assert(1 == 0, "for");
+   }
+   Assert(1 == 0, "after");
    gameEngine.RegisterModule(*ParticleManager::GetInstance());
    gameEngine.StartEngine();
 }
