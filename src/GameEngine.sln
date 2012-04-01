@@ -5,6 +5,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameTemplate", "Projects\Ga
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "Projects\GameEngine\GameEngine.vcxproj", "{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{AAE1F2DF-37A3-450E-AAAE-4C4EE62576C3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collector", "..\thirdparty\profiler\Collector\Profiler.vcxproj", "{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,8 +23,15 @@ Global
 		{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}.Debug|Win32.Build.0 = Debug|Win32
 		{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}.Release|Win32.ActiveCfg = Release|Win32
 		{6E22BBC0-DBCB-4DA3-ADAC-E9AD39876F4D}.Release|Win32.Build.0 = Release|Win32
+		{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8}.Debug|Win32.Build.0 = Debug|Win32
+		{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8}.Release|Win32.ActiveCfg = Release|Win32
+		{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{99DF5F6D-27F7-4E8E-8BC9-F1BF106946F8} = {AAE1F2DF-37A3-450E-AAAE-4C4EE62576C3}
 	EndGlobalSection
 EndGlobal

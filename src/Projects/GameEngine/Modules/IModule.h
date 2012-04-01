@@ -5,16 +5,26 @@
 
 #include "GameEngine/Macros/DLL.h"
 
-template<class ChildClass>
-class DLL_DECL IModule : public IEngineModule
-{
-protected:
-   typedef TASK_TYPE::MemberCallback<ChildClass> Task;
+template class DLL_DECL Util::Callback<void, float>;
+template class DLL_DECL Util::Callback<void, float>::BaseCallback;
+template class DLL_DECL Util::Callback<void, float>::GlobalCallback;
 
-   Task* CreateTask(void (ChildClass::*aFunction)(float))
+namespace GameEngine
+{
+   /// Specialised module that can easily create member function task
+   template<class ChildClass>
+   class IModule : public GameEngine::IEngineModule
    {
-      return new Task(static_cast<ChildClass* const>(this), aFunction);
-   }
-};
+    public:
+      typedef TASK_TYPE::MemberCallback<ChildClass> Task; ///< Definition of a member function task
+
+      /// Create a member function task
+      /// \param aFunction The member function to create a task from
+      Task* CreateTask(void (ChildClass::*aFunction)(float))
+      {
+         return new Task(static_cast<ChildClass* const>(this), aFunction);
+      }
+   };
+}
 
 #endif I_MODULE_H

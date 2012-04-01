@@ -27,7 +27,7 @@ static bool MainLoop(float aDeltaTime)
 
 int main() 
 {
-   gameEngine.RegisterModule(*ParticleManager::GetInstance());
+   //gameEngine.RegisterModule(*ParticleManager::GetInstance());
    gameEngine.StartEngine();
 }
 

@@ -6,60 +6,49 @@ namespace GameEngine
 {
    Engine::Engine(GAME_LOOP_FUNCTION aGameLoopFunctionPointer)
       : mFrameId(0)
-      , mCurrentActiveFlags(ENGINE_EVENT::NONE)
-      , mLastClockTime(0)
+      , mCurrentEventsFlags(ENGINE_EVENT::NONE)
+      , mPreviousClockTime(0)
       , mGameLoopFunction(aGameLoopFunctionPointer)
    {
    }
 
    void Engine::StartEngine()
    {
-      GameLoop();
+      InternalGameLoop();
    }
 
-   void Engine::GameLoop()
+   void Engine::InternalGameLoop()
    {
       // Reset flags
-      mCurrentActiveFlags = ENGINE_EVENT::NONE;
+      mCurrentEventsFlags = ENGINE_EVENT::NONE;
 
-      while((mCurrentActiveFlags & ENGINE_EVENT::QUIT) == 0)
+      while((mCurrentEventsFlags & ENGINE_EVENT::QUIT) == 0)
       {
          clock_t currentClock = clock();
-         const float deltaTime = static_cast<float>((currentClock - mLastClockTime)) / static_cast<float>(CLOCKS_PER_SEC);
+         const float deltaTime = static_cast<float>((currentClock - mPreviousClockTime)) / static_cast<float>(CLOCKS_PER_SEC);
          mScheduler.Execute(mModuleList, deltaTime);
-         mLastClockTime = currentClock;
-         mFrameId = Incrementator<INCREMENTATOR_ENUM::FRAME_ID>::GetIncrement();
+         mPreviousClockTime = currentClock;
+         mFrameId = Util::Incrementator<INCREMENTATOR_ENUM::FRAME_ID>::GetIncrement();
       }
    }
 
    void Engine::FlagEvent(ENGINE_EVENT::Enum aEvent)
    {
-      mCurrentActiveFlags = static_cast<ENGINE_EVENT::Enum>(mCurrentActiveFlags | aEvent);
+      mCurrentEventsFlags = static_cast<ENGINE_EVENT::Enum>(mCurrentEventsFlags | aEvent);
    }
 
-   inline IncrementatorType Engine::GetCurrentFrameId() const
+   inline Engine::FrameId Engine::GetCurrentFrameId() const
    {
       return mFrameId;
    }
 
    void Engine::RegisterModule(IEngineModule& arModule)
    {
-      mModuleList.push_back(&arModule);
+      mModuleList.Add(&arModule);
    }
 
    void Engine::UnregisterModule(IEngineModule& arModule)
    {
-      for(std::vector<IEngineModule*>::iterator it = mModuleList.begin(); it != mModuleList.end(); ++it)
-      {
-         if((*it)->GetId() == arModule.GetId())
-         {
-            // ***Needs to be tested***
-            // Swap with the last (could be optimized with coding swap without assignment for last parameter
-            std::swap(*it, mModuleList.back());
-            // Remove the last
-            mModuleList.pop_back();
-            break;
-         }
-      }
+     mModuleList.Remove(&arModule);
    }
 }

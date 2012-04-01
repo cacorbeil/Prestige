@@ -13,9 +13,6 @@
     <Filter Include="Modules">
       <UniqueIdentifier>{2bb8c184-1e03-4703-a080-d73024c78f9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Modules\TaskGraph">
-      <UniqueIdentifier>{007a713b-14fc-4499-abd8-908b1fb8b1a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util\Memory">
       <UniqueIdentifier>{a620938c-ffca-4f10-a11d-1cf834629d5e}</UniqueIdentifier>
     </Filter>
@@ -25,39 +22,27 @@
     <Filter Include="Math">
       <UniqueIdentifier>{001d3e01-bbc1-4534-8f37-ce2568880dc2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util\Enum">
+      <UniqueIdentifier>{ca96ce82-0786-4f67-bc0b-a405d8ee765a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Identifier">
+      <UniqueIdentifier>{22d38114-2138-4699-91ea-4f3dc64b79d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Callback">
+      <UniqueIdentifier>{828d9ba0-9b2c-4d59-a931-a49907030ba8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros\DLL.h">
       <Filter>Macros</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Incrementator.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\DistributedEnum.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Engine.h">
       <Filter>GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\IncrementatorEnum.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\TaskGraph.h">
-      <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Core\Scheduler.h">
       <Filter>GameEngine</Filter>
     </ClInclude>
     <ClInclude Include="Modules\TaskNode.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\ModuleDictionnary.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\TaskGraph\TaskCallback.h">
-      <Filter>Modules\TaskGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="Modules\IEngineModule.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Modules\IModule.h">
@@ -69,35 +54,46 @@
     <ClInclude Include="Util\Memory\BaseMemoryPool.h">
       <Filter>Util\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Util\BitField\DynamicBitField.h">
-      <Filter>Util\BitField</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\BitField\StaticBitField.h">
-      <Filter>Util\BitField</Filter>
-    </ClInclude>
     <ClInclude Include="Util\BitField\SlotManager.h">
       <Filter>Util\BitField</Filter>
     </ClInclude>
     <ClInclude Include="Math\Bounds.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\IEngineModule.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\ModuleDictionary.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\TaskTree.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\BitField\FlagContainer.h">
+      <Filter>Util\BitField</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\BitField\StaticFlagContainer.h">
+      <Filter>Util\BitField</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Callback\Callback.h">
+      <Filter>Util\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Identifier\Incrementator.h">
+      <Filter>Util\Identifier</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Identifier\IncrementatorEnum.h">
+      <Filter>Util\Identifier</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Enum\DistributedEnum.h">
+      <Filter>Util\Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="Core\Engine.cpp">
       <Filter>GameEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\TaskNode.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\ModuleDictionnary.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Scheduler.cpp">
       <Filter>GameEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Modules\TaskGraph.cpp">
-      <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Modules\IEngineModule.cpp">
       <Filter>Modules</Filter>
@@ -105,22 +101,41 @@
     <ClCompile Include="Util\Memory\BaseMemoryPool.cpp">
       <Filter>Util\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Util\BitField\DynamicBitField.cpp">
-      <Filter>Util\BitField</Filter>
-    </ClCompile>
     <ClCompile Include="Util\BitField\SlotManager.cpp">
       <Filter>Util\BitField</Filter>
     </ClCompile>
+    <ClCompile Include="Modules\ModuleDictionary.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\TaskNode.inl">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\TaskTree.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\BitField\FlagContainer.cpp">
+      <Filter>Util\BitField</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Util\BitField\StaticBitField.inl">
-      <Filter>Util\BitField</Filter>
-    </None>
-    <None Include="Util\BitField\DynamicBitField.inl">
-      <Filter>Util\BitField</Filter>
-    </None>
     <None Include="Util\Memory\BaseMemoryPool.inl">
       <Filter>Util\Memory</Filter>
+    </None>
+    <None Include="Modules\IEngineModule.inl">
+      <Filter>Modules</Filter>
+    </None>
+    <None Include="Modules\ModuleDictionary.inl">
+      <Filter>Modules</Filter>
+    </None>
+    <None Include="Util\BitField\FlagContainer.inl">
+      <Filter>Util\BitField</Filter>
+    </None>
+    <None Include="Util\BitField\StaticFlagContainer.inl">
+      <Filter>Util\BitField</Filter>
+    </None>
+    <None Include="Util\Callback\Callback.inl">
+      <Filter>Util\Callback</Filter>
     </None>
   </ItemGroup>
 </Project>

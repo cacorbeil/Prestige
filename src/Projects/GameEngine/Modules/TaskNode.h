@@ -2,39 +2,54 @@
 #define TASK_NODE_H
 
 #include <vector>
-#include "GameEngine/Util/Incrementator.h"
+#include "GameEngine/Util/Identifier/Incrementator.h"
 
 #include "GameEngine/Macros/DLL.h"
 
 DISTRIBUTED_ENUM(INCREMENTATOR_ENUM, TASK_ID);
 
-EXPORT_STL_VECTOR(const IncrementatorType);
+EXPORT_STL_VECTOR(const Util::IncrementatorType);
 
-template<typename Type>
-class /*DLL_DECL*/ TaskNode
+namespace GameEngine
 {
-public:
-   TaskNode();
-   TaskNode(const Type& aType);
-   TaskNode(const Type& aType, std::vector<IncrementatorType> aChildrenList);
-   TaskNode(const TaskNode& arTaskNode);
-   ~TaskNode();
+   /// Created when a task is added to a TaskTree.
+   /// Contains the task and the information on parent tasks
+   /// \see TaskTree
+   template<typename Type>
+   class TaskNode
+   {
+   public:
+      typedef Util::IncrementatorType Id;
 
-   inline unsigned int GetParentCount() const;
-   inline void IncrementParent(IncrementatorType aParentId);
-   inline void RemoveParent(IncrementatorType aParentId);
+      TaskNode();
+      /// Constructor without parent task
+      /// \param aTask The task
+      TaskNode(const Type& aTask);
+      /// Constructor with parent task
+      /// \param aTask The task
+      /// \param aParentIdList The list of parent task id
+      TaskNode(const Type& aTask, std::vector<Id> aParentIdList);
+      TaskNode(const TaskNode& arTaskNode);
+      ~TaskNode();
 
-   inline IncrementatorType GetId() const;
-   inline Type& GetValue();
+      inline unsigned int GetParentCount() const;
+      /// Add a parent task
+      inline void AddParent(Id aParentId);
+      /// Remove a parent task
+      inline void RemoveParent(Id aParentId);
 
-protected:
-private:
-   IncrementatorType mId;
-   unsigned int mParentCount;
-   Type mValue;
-   std::vector<const IncrementatorType> mParentIdList;
-};
+      /// Get the unique identifier of this task node
+      inline Id GetId() const;
+      inline Type& GetTask();
 
-#include "TaskNode.cpp"
+   private:
+      Id mId;                                ///< The node identifier
+      Type mTask;
+      std::vector<const Id> mParentIdList;   ///< List of parent task ids
+   };
+}
+
+
+#include "TaskNode.inl"
 
 #endif TASK_NODE_H

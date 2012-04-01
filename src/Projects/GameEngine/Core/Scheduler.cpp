@@ -5,29 +5,21 @@
 namespace GameEngine
 {
 
-   void Scheduler::Execute(std::vector<IEngineModule*> aModuleList, float aDeltaTime) const
+   void Scheduler::Execute(ModuleDictionary& aModuleList, float aDeltaTime) const
    {
-      for(std::vector<IEngineModule*>::iterator it = aModuleList.begin(); it != aModuleList.end(); ++it)
+      for(ModuleDictionary::iterator it = aModuleList.Begin(); it != aModuleList.End(); ++it)
       {
-         TaskGraph tasks;
-         (*it)->GetTasks(tasks);
+         TaskTree tasks;
+         it->GetTasks(tasks);
          while(tasks.GetCount() > 0)
          {
             if(tasks.GetAvailableCount() > 0)
             {
                TaskFunctionNode* task = &tasks.GetOne();
-               // Execute task
-               (*task->GetValue())(aDeltaTime);
 
+               (*task->GetTask())(aDeltaTime);
                tasks.Remove(*task);
             }
          }
-      }
    }
-
-   void Scheduler::Dispose()
-   {
-      // Destroy threadpool
-   }
-
 }

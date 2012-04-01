@@ -17,28 +17,28 @@
     <ClInclude Include="Math\Bounds.h" />
     <ClInclude Include="Modules\IEngineModule.h" />
     <ClInclude Include="Modules\IModule.h" />
-    <ClInclude Include="Modules\ModuleDictionnary.h" />
-    <ClInclude Include="Modules\TaskGraph\TaskCallback.h" />
+    <ClInclude Include="Modules\ModuleDictionary.h" />
     <ClInclude Include="Modules\TaskNode.h" />
-    <ClInclude Include="Modules\TaskGraph.h" />
-    <ClInclude Include="Util\BitField\DynamicBitField.h" />
+    <ClInclude Include="Modules\TaskTree.h" />
+    <ClInclude Include="Util\BitField\FlagContainer.h" />
     <ClInclude Include="Util\BitField\SlotManager.h" />
-    <ClInclude Include="Util\BitField\StaticBitField.h" />
+    <ClInclude Include="Util\BitField\StaticFlagContainer.h" />
+    <ClInclude Include="Util\Callback\Callback.h" />
     <ClInclude Include="Util\Constants.h" />
-    <ClInclude Include="Util\Incrementator.h" />
-    <ClInclude Include="Util\DistributedEnum.h" />
-    <ClInclude Include="Util\IncrementatorEnum.h" />
+    <ClInclude Include="Util\Enum\DistributedEnum.h" />
+    <ClInclude Include="Util\Identifier\Incrementator.h" />
+    <ClInclude Include="Util\Identifier\IncrementatorEnum.h" />
     <ClInclude Include="Util\Memory\BaseMemoryPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Scheduler.cpp" />
-    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Modules\IEngineModule.cpp" />
-    <ClCompile Include="Modules\ModuleDictionnary.cpp" />
-    <ClCompile Include="Modules\TaskGraph.cpp" />
-    <ClCompile Include="Modules\TaskNode.cpp" />
-    <ClCompile Include="Util\BitField\DynamicBitField.cpp" />
+    <ClCompile Include="Modules\ModuleDictionary.cpp" />
+    <ClCompile Include="Modules\TaskTree.cpp" />
+    <ClCompile Include="Modules\TaskNode.inl" />
+    <ClCompile Include="Util\BitField\FlagContainer.cpp" />
     <ClCompile Include="Util\BitField\SlotManager.cpp" />
     <ClCompile Include="Util\Memory\BaseMemoryPool.cpp" />
   </ItemGroup>
@@ -50,8 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Util\BitField\DynamicBitField.inl" />
-    <None Include="Util\BitField\StaticBitField.inl" />
+    <None Include="Modules\IEngineModule.inl" />
+    <None Include="Modules\ModuleDictionary.inl" />
+    <None Include="Util\BitField\FlagContainer.inl" />
+    <None Include="Util\BitField\StaticFlagContainer.inl" />
+    <None Include="Util\Callback\Callback.inl" />
     <None Include="Util\Memory\BaseMemoryPool.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -65,6 +68,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -86,7 +90,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)..\bin\Intermediate\$(ProjectName)\$(Configuration)\</IntDir>
-    <IncludePath>$(SolutionDir)/Projects/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)/Projects/;$(IncludePath);$(SolutionDir)/../thirdparty</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -107,6 +111,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib />
     <PreBuildEvent>
@@ -123,7 +128,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>WIN32;DLL_EXPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

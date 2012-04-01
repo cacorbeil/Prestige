@@ -1,8 +1,9 @@
 #ifndef INCREMENTATOR_ENUM_H
 #define INCREMENTATOR_ENUM_H
 
-#include "DistributedEnum.h"
+#include "GameEngine/Util/Enum/DistributedEnum.h"
 
+/// Type of incrementators
 DISTRIBUTED_ENUM_DEFINITION_BEGIN(INCREMENTATOR_ENUM)
 {
    FRAME_ID, // From file: 'Core\Engine.h'

@@ -1,28 +1,13 @@
 #include "IEngineModule.h"
 
-IEngineModule::IEngineModule()
-   : mId(Incrementator<INCREMENTATOR_ENUM::MODULE_ID>::GetIncrement())
-   , mEnabled(true)
+namespace GameEngine
 {
-}
 
-bool IEngineModule::Activate() { return true; } // Implementation is optional
-void IEngineModule::Deactivate() { } // Implementation is optional
-
-void IEngineModule::Enable()
-{
-   if(!mEnabled)
+   IEngineModule::IEngineModule()
+      : mId(Util::Incrementator<INCREMENTATOR_ENUM::MODULE_ID>::GetIncrement())
    {
-      mEnabled = true;
-      Activate();
    }
-}
 
-void IEngineModule::Disable()
-{
-   if(mEnabled)
-   {
-      mEnabled = false;
-      Deactivate();
-   }
+   bool IEngineModule::Activate() { return true; } // Implementation is optional
+   void IEngineModule::Deactivate() { } // Implementation is optional
 }

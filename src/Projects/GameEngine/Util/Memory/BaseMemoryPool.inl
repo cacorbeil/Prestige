@@ -1,20 +1,21 @@
 #ifdef BASE_MEMORY_POOL_H
 
-inline void* BaseMemoryPool::Get(SectorIndex index)
+namespace Util
 {
-   //ASSERT(mFreeSector.GetValue(index));
+   inline bool BaseMemoryPool::HasRoom() const
+   {
+      return mFreeSector.HasFree();
+   }
 
-   return GetMemoryAddress(index);
-}
+   inline BaseMemoryPool::SectorIndex BaseMemoryPool::GetSize() const
+   { 
+      return mFreeSector.GetCount();
+   }
 
-inline BaseMemoryPool::SectorIndex BaseMemoryPool::GetSize() const
-{ 
-   return mFreeSector.GetCount();
-}
-
-inline void* BaseMemoryPool::GetMemoryAddress(SectorIndex index) const
-{
-   return static_cast<void*>(static_cast<char*>(mMemoryBlock) + (mSectorSize * index));
+   inline void* BaseMemoryPool::GetMemoryAddress(SectorIndex aIndex) const
+   {
+      return static_cast<void*>(static_cast<char*>(mMemoryBlock) + (mSectorSize * aIndex));
+   }
 }
 
 #endif BASE_MEMORY_POOL_H
