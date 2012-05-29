@@ -31,6 +31,9 @@
     <Filter Include="Util\Callback">
       <UniqueIdentifier>{828d9ba0-9b2c-4d59-a931-a49907030ba8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util\Assert">
+      <UniqueIdentifier>{59ed8b76-c44c-40f0-a792-93e8b9f19bce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macros\DLL.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="Util\Enum\DistributedEnum.h">
       <Filter>Util\Enum</Filter>
     </ClInclude>
+    <ClInclude Include="Util\Assert\Assert.h">
+      <Filter>Util\Assert</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp">
@@ -137,5 +143,6 @@
     <None Include="Util\Callback\Callback.inl">
       <Filter>Util\Callback</Filter>
     </None>
+    <None Include="Util\Assert\CustomAssertFunction.inl" />
   </ItemGroup>
 </Project>

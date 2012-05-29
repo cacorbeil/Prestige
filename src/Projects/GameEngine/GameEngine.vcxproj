@@ -29,6 +29,7 @@
     <ClInclude Include="Util\Identifier\Incrementator.h" />
     <ClInclude Include="Util\Identifier\IncrementatorEnum.h" />
     <ClInclude Include="Util\Memory\BaseMemoryPool.h" />
+    <ClInclude Include="Util\Assert\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp" />
@@ -52,6 +53,7 @@
   <ItemGroup>
     <None Include="Modules\IEngineModule.inl" />
     <None Include="Modules\ModuleDictionary.inl" />
+    <None Include="Util\Assert\CustomAssertFunction.inl" />
     <None Include="Util\BitField\FlagContainer.inl" />
     <None Include="Util\BitField\StaticFlagContainer.inl" />
     <None Include="Util\Callback\Callback.inl" />
