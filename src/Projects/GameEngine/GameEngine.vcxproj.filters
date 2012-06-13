@@ -93,6 +93,9 @@
     <ClInclude Include="Util\Assert\Assert.h">
       <Filter>Util\Assert</Filter>
     </ClInclude>
+    <ClInclude Include="PrecompiledHeader.h" />
+    <ClInclude Include="Util\Assert\CustomAsserFunction.h" />
+    <ClInclude Include="Util\Assert\CustomAssertFunction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Engine.cpp">
@@ -123,6 +126,7 @@
       <Filter>Util\BitField</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="PrecompiledHeader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Util\Memory\BaseMemoryPool.inl">
@@ -143,6 +147,7 @@
     <None Include="Util\Callback\Callback.inl">
       <Filter>Util\Callback</Filter>
     </None>
-    <None Include="Util\Assert\CustomAssertFunction.inl" />
+    <None Include="util\assert\customassertfunction.inl" />
+    <None Include="Util\BitField\SlotManager.inl" />
   </ItemGroup>
 </Project>

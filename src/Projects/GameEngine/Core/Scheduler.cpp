@@ -1,10 +1,10 @@
-#include "Scheduler.h"
+#include "PrecompiledHeader.h"
 
+#include "Scheduler.h"
 #include "GameEngine/Modules/IEngineModule.h"
 
 namespace GameEngine
 {
-
    void Scheduler::Execute(ModuleDictionary& aModuleList, float aDeltaTime) const
    {
       for(ModuleDictionary::iterator it = aModuleList.Begin(); it != aModuleList.End(); ++it)
@@ -21,5 +21,6 @@ namespace GameEngine
                tasks.Remove(*task);
             }
          }
+      }
    }
 }

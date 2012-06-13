@@ -1,3 +1,5 @@
+#include "PrecompiledHeader.h"
+
 #include "BaseMemoryPool.h"
 
 #include "GameEngine/Util/Constants.h"
@@ -54,7 +56,7 @@ namespace Util
    #ifdef DEBUG
       for(FlagContainer::FlagId i = aSectorCount; i < mFreeSector.GetCount(); ++i)
       {
-         // ASSERT(!mFreeSector.GetValue(i), "Memory Pool have sectors that are currently use that will be lost in the resizing");
+         Assert(!mFreeSector.IsFull(), "Memory Pool have sectors that are currently use that will be lost in the resizing");
          if(!(!mFreeSector.Get(i)))
          {
             return;

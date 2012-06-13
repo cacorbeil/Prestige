@@ -1,3 +1,5 @@
+#include "PrecompiledHeader.h"
+
 #include "ModuleDictionary.h"
 
 namespace GameEngine

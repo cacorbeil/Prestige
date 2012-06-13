@@ -20,6 +20,9 @@
     <ClInclude Include="Modules\ModuleDictionary.h" />
     <ClInclude Include="Modules\TaskNode.h" />
     <ClInclude Include="Modules\TaskTree.h" />
+    <ClInclude Include="PrecompiledHeader.h" />
+    <ClInclude Include="Util\Assert\CustomAsserFunction.h" />
+    <ClInclude Include="Util\Assert\CustomAssertFunction.h" />
     <ClInclude Include="Util\BitField\FlagContainer.h" />
     <ClInclude Include="Util\BitField\SlotManager.h" />
     <ClInclude Include="Util\BitField\StaticFlagContainer.h" />
@@ -32,13 +35,20 @@
     <ClInclude Include="Util\Assert\Assert.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Engine.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Core\Scheduler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Modules\IEngineModule.cpp" />
     <ClCompile Include="Modules\ModuleDictionary.cpp" />
     <ClCompile Include="Modules\TaskTree.cpp" />
-    <ClCompile Include="Modules\TaskNode.inl" />
+    <ClCompile Include="Modules\TaskNode.inl">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PrecompiledHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Util\BitField\FlagContainer.cpp" />
     <ClCompile Include="Util\BitField\SlotManager.cpp" />
     <ClCompile Include="Util\Memory\BaseMemoryPool.cpp" />
@@ -53,8 +63,9 @@
   <ItemGroup>
     <None Include="Modules\IEngineModule.inl" />
     <None Include="Modules\ModuleDictionary.inl" />
-    <None Include="Util\Assert\CustomAssertFunction.inl" />
+    <None Include="util\assert\customassertfunction.inl" />
     <None Include="Util\BitField\FlagContainer.inl" />
+    <None Include="Util\BitField\SlotManager.inl" />
     <None Include="Util\BitField\StaticFlagContainer.inl" />
     <None Include="Util\Callback\Callback.inl" />
     <None Include="Util\Memory\BaseMemoryPool.inl" />
@@ -70,7 +81,6 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -104,11 +114,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;DLL_EXPORT;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

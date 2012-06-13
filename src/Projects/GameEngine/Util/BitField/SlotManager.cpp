@@ -1,3 +1,5 @@
+#include "PrecompiledHeader.h"
+
 #include "SlotManager.h"
 
 namespace Util
@@ -22,7 +24,7 @@ namespace Util
 
    FlagContainer::FlagId SlotManager::GetFree() const
    {
-      //ASSERT(HasFree(), "No field is free use HasFree() to verify if any unflagged field are left");
+      Assert(HasFree(), "No field is free use HasFree() to verify if any unflagged field are left");
       for(SectorId i = 0; i != mSectorCount; ++i)
       {
          // Sector with a free field

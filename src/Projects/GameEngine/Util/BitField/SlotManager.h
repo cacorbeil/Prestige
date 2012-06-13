@@ -22,7 +22,11 @@ namespace Util
       /// \note HasFree() must be called before to make sure there is an available slot
       /// \see HasFree()
       FlagId GetFree() const;
+
+      inline bool IsFull() const;
    };
+
+   #include "SlotManager.inl"
 }
 
 #endif SLOT_MANAGER_H

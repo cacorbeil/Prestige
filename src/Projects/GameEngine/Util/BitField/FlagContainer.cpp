@@ -1,3 +1,5 @@
+#include "PrecompiledHeader.h"
+
 #include "FlagContainer.h"
 
 namespace Util
@@ -97,7 +99,7 @@ namespace Util
 
    bool FlagContainer::Get(FlagId aFlagIndex) const
    {
-      //ASSERT(aFlagIndex < mBitCount, "Bit index too high");
+      Assert(aFlagIndex < mBitCount, "Bit index too high");
       if(!(aFlagIndex < mBitCount))
          return false;
 

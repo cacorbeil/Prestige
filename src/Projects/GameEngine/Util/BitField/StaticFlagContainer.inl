@@ -38,7 +38,7 @@ void StaticFlagContainer<N>::Set(unsigned int aFlagIndex, bool aValue)
 template <int N>
 bool StaticFlagContainer<N>::Get(FlagId aFlagIndex) const
 {
-   //ASSERT(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high");
+   Assert(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high");
    if(!(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS))
       return false;
 

@@ -1,14 +1,19 @@
-#include "CustomAssertFunction.inl"
+#ifndef ASSERT_H
+#define ASSERT_H
 
-static bool ignoreAll = false;
+#if defined( WIN32 )
+   #include "CustomAssertFunction.h"
+#endif
 
 #if defined( _DEBUG ) && defined( WIN32 )
-   extern bool __stdcall CustomAssertFunction( bool, char*, int, char*, bool* );
+   static bool ignoreAll = false;
+   bool CustomAssertFunction( bool, char*, int, char*, bool* );
+
    #define Assert( expr, description ) \
    do { \
       if ( !ignoreAll ) \
       { \
-         if ( !expr ) \
+         if ( !(expr) ) \
          { \
             static bool ignoreThis = false; \
             if ( !ignoreThis ) \
@@ -27,3 +32,5 @@ static bool ignoreAll = false;
 #else
    #define Assert( exp, description )
 #endif
+
+#endif ASSERT_H

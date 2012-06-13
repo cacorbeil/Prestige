@@ -1,3 +1,5 @@
+#include "PrecompiledHeader.h"
+
 #include "TaskTree.h"
 
 namespace GameEngine
@@ -60,8 +62,7 @@ namespace GameEngine
    {
       UpdateAvailableTasks();
 
-      // Assert available task
-      //assert(GetAvailableCount() > 0);
+      Assert(GetAvailableCount() > 0, "No tasks were available");
 
       TaskFunctionNode* node = mAvailableTasks.back();
       mAvailableTasks.pop_back();
