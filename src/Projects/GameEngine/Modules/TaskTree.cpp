@@ -62,7 +62,7 @@ namespace GameEngine
    {
       UpdateAvailableTasks();
 
-      Assert(GetAvailableCount() > 0, "No tasks were available");
+      ASSERT_COND(GetAvailableCount() > 0, "No tasks were available");
 
       TaskFunctionNode* node = mAvailableTasks.back();
       mAvailableTasks.pop_back();
@@ -104,7 +104,7 @@ namespace GameEngine
          }
       }
 
-      // assert doesn't exists
+      ASSERT("Specified Node doesn't exists");
       return mAllTasks.end();
    }
 

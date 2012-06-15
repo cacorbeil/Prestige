@@ -39,10 +39,14 @@ namespace Util
 
    void BaseMemoryPool::Free(void* p)
    {
-      //ASSERT_RETURN(p >= mMemoryBlock && p < mMemoryBlock + mSectorCount * mSectorSize, "Given pointer is not from the memory pool");
+      const char* slotPointer = static_cast<char*>(p);
+      const char* blockPointer = static_cast<char*>(mMemoryBlock);
+      ASSERT_COND_EARLY_OUT(
+         slotPointer >= blockPointer && 
+         slotPointer < blockPointer + mFreeSector.GetCount() * mSectorSize, "Given pointer is not from the memory pool");
 
       FlagContainer::FlagId locationId = 
-         ((static_cast<char*>(p)) - (static_cast<char*>(mMemoryBlock))) / mSectorSize;
+         (slotPointer - blockPointer) / mSectorSize;
 
       mFreeSector.Set(locationId, false);
 
@@ -56,7 +60,7 @@ namespace Util
    #ifdef DEBUG
       for(FlagContainer::FlagId i = aSectorCount; i < mFreeSector.GetCount(); ++i)
       {
-         Assert(!mFreeSector.IsFull(), "Memory Pool have sectors that are currently use that will be lost in the resizing");
+         ASSERT_COND(!mFreeSector.IsFull(), "Memory Pool have sectors that are currently use that will be lost in the resizing");
          if(!(!mFreeSector.Get(i)))
          {
             return;

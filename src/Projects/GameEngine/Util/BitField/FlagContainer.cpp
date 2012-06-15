@@ -77,7 +77,7 @@ namespace Util
 
    void FlagContainer::Set(FlagId aFlagIndex, bool aBitValue)
    {
-      //ASSERT_EARLY_OUT(aFlagIndex < mBitCount, "Bit index too high", false);
+      ASSERT_COND_EARLY_OUT(aFlagIndex < mBitCount, "Bit index too high");
       if(!(aFlagIndex < mBitCount))
          return;
 
@@ -99,7 +99,7 @@ namespace Util
 
    bool FlagContainer::Get(FlagId aFlagIndex) const
    {
-      Assert(aFlagIndex < mBitCount, "Bit index too high");
+      ASSERT_COND(aFlagIndex < mBitCount, "Bit index too high");
       if(!(aFlagIndex < mBitCount))
          return false;
 

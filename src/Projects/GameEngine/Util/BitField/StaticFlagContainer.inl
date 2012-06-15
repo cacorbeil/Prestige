@@ -13,7 +13,7 @@ StaticFlagContainer<N>::StaticFlagContainer()
 template <int N>
 void StaticFlagContainer<N>::Set(unsigned int aFlagIndex, bool aValue)
 {
-   //ASSERT_RETURN(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high", false);
+   ASSERT_COND_EARLY_OUT(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS, "Bit index too high");
    if(!(aFlagIndex < BIT_PER_SECTOR * NUMBER_OF_SECTORS))
       return;
 

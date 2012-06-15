@@ -24,7 +24,7 @@ namespace Util
 
    FlagContainer::FlagId SlotManager::GetFree() const
    {
-      Assert(HasFree(), "No field is free use HasFree() to verify if any unflagged field are left");
+      ASSERT_COND(HasFree(), "No field is free use HasFree() to verify if any unflagged field are left");
       for(SectorId i = 0; i != mSectorCount; ++i)
       {
          // Sector with a free field
@@ -42,7 +42,7 @@ namespace Util
          }
       }
 
-      //ASSERT_RETURN(false, "No bit left found and we got here?", -1);
+      ASSERT("No bit left found and we got here?");
       return 0;
    }
 

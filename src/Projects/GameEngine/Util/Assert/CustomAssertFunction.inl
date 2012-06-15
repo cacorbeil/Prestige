@@ -11,7 +11,7 @@ inline LPWORD lpwAlign( LPWORD lpIn )
    return (LPWORD)ul;
 }
 
-inline bool __stdcall DialogProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
+inline bool __stdcall DialogProc( HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM /*lParam*/ )
 {
    switch (uMsg)
    {
